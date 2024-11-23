@@ -45,10 +45,10 @@
 
 <br />
 
-## ✅ Getting started
+##### ✅ Getting started
 **OpenCraft** is a game programmed in Java, using the same tools (LWJGL 3 + Java 21) as Minecraft.
 
-### Why this project? 🤔
+##### Why this project? 🤔
 I created this project because Minecraft is closed-source. I know that you can decompile it, but modification
 and redistribution of a modified copy of Minecraft is actually illegal. So I created a clone of Minecraft that
 allows modification and redistribution. I want to create a community around this project,
@@ -73,7 +73,7 @@ I hope that you can be part of that community forking the repository or simply, 
 
 ---
 
-## ☕ Download
+##### ☕ Download
 [Windows Installer](https://github.com/OpenCraft-Studios/OpenCraft/releases/download/auto-release/opencraft-windows.bat)
 
 [Latest .jar](https://github.com/OpenCraft-Studios/OpenCraft/releases/download/auto-release/opencraft.jar)
@@ -82,7 +82,7 @@ I hope that you can be part of that community forking the repository or simply, 
 
 ---
 
-## 🚧 Build
+##### 🚧 Build
 
 ```bash
 git clone https://github.com/OpenCraft-Studios/OpenCraft
@@ -95,7 +95,7 @@ java -jar target/opencraft.jar
 
 ---
 
-## ⚖️ License
+##### ⚖️ License
 
 **You can:**
 - Make modifications of this project. *(includes modifying texture, resources, classes,...)*
@@ -124,7 +124,7 @@ java -jar target/opencraft.jar
 
 <br />
 
-## 👷‍♂️ Contributors
+##### 👷‍♂️ Contributors
 | [![CiroZDP](https://avatars.githubusercontent.com/u/161502824?v=4)](https://github.com/CiroZDP) | ![Community](https://cdni.iconscout.com/illustration/free/thumb/free-community-2103591-1768087.png)	|
 |:-----------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|
 |                                           **CiroZDP**                                           |                                          **The community**                                          |
