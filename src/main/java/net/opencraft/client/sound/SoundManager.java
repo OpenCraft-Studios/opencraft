@@ -178,9 +178,9 @@ public class SoundManager {
 
 	public void stopSound(String var1) {
 		if (sndSystem == null)
-			return; // TODO: Temporary fix to OpenCraft problem
+			return;
 
-		this.sndSystem.stop(var1);
+		sndSystem.stop(var1);
 	}
 
 	public void setListener(EntityLiving var1, float var2) {

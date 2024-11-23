@@ -65,10 +65,10 @@ public class ChunkLoader implements IChunkLoader {
 		return null;
 	}
 
-	public void saveChunk(final World fe, final Chunk jw) {
-		final File chunkFileForXZ = this.chunkFileForXZ(jw.xPosition, jw.zPosition);
+	public void saveChunk(World world, Chunk chunk) {
+		final File chunkFileForXZ = this.chunkFileForXZ(chunk.xPosition, chunk.zPosition);
 		if (chunkFileForXZ.exists()) {
-			fe.diskSize -= chunkFileForXZ.length();
+			world.diskSize -= chunkFileForXZ.length();
 		}
 		try {
 			final File file = new File(this.saveDir, "tmp_chunk.dat");
@@ -76,14 +76,14 @@ public class ChunkLoader implements IChunkLoader {
 			final NBTTagCompound ae = new NBTTagCompound();
 			final NBTTagCompound nbtTagCompound = new NBTTagCompound();
 			ae.setTag("Level", (NBTBase) nbtTagCompound);
-			this.storeChunkInCompound(jw, fe, nbtTagCompound);
+			this.storeChunkInCompound(chunk, world, nbtTagCompound);
 			GZTools.writeGZTagOS(ae, (OutputStream) outputStream);
 			outputStream.close();
 			if (chunkFileForXZ.exists()) {
 				chunkFileForXZ.delete();
 			}
 			file.renameTo(chunkFileForXZ);
-			fe.diskSize += chunkFileForXZ.length();
+			world.diskSize += chunkFileForXZ.length();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

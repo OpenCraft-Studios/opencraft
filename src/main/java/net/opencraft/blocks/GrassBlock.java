@@ -3,13 +3,13 @@ package net.opencraft.blocks;
 
 import java.util.Random;
 
-import net.opencraft.blocks.material.EnumMaterial;
+import net.opencraft.blocks.material.Material;
 import net.opencraft.world.World;
 
 public class GrassBlock extends Block {
 
 	protected GrassBlock(final int blockid) {
-		super(blockid, EnumMaterial.GROUND);
+		super(blockid, Material.GROUND);
 		this.blockIndexInTexture = 3;
 		this.setTickOnLoad(true);
 	}

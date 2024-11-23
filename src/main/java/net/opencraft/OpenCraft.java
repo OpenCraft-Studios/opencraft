@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.util.Objects;
 
@@ -46,13 +47,14 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 	@Nonnull
 	public static OpenCraft oc;
 
+	public int width, height;
+	public int scaledWidth, scaledHeight;
+	
 	public static long[] tickTimes;
 	public static int numRecordedFrameTimes;
 	private static File gameDir;
 	public long window;
 	public PlayerController playerController;
-	public int width;
-	public int height;
 	private Timer timer;
 	public World world;
 	public RenderGlobal renderGlobal;
@@ -171,7 +173,7 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 		keyboard = new KeyboardInput(window);
 
 		timer = new Timer(20.0f);
-		invoke(NULL, width, height);
+		resize(width, height);
 		mcDataDir = getGameDir();
 		options = new GameSettings(mcDataDir);
 		renderer = new Renderer(options);
@@ -187,9 +189,11 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.1f);
 		glCullFace(GL_BACK);
+		
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW);
+		
 		checkGLError();
 		sndManager.loadSoundSettings(options);
 		renderer.registerTextureFX(textureLavaFX);
@@ -200,7 +204,7 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 		renderer.registerTextureFX(new TextureFlamesFX(1));
 		renderer.registerTextureFX(new TextureGearsFX(0));
 		renderer.registerTextureFX(new TextureGearsFX(1));
-		renderGlobal = new RenderGlobal(oc, renderer);
+		renderGlobal = new RenderGlobal(renderer);
 		glViewport(0, 0, width, height);
 		displayGuiScreen(new GuiMainMenu());
 		effectRenderer = new EffectRenderer(world, renderer);
@@ -211,9 +215,7 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 	}
 
 	private void loadScreen() {
-		final ScaledResolution scaledResolution = new ScaledResolution(width, height);
-		final int scaledWidth = scaledResolution.getScaledWidth();
-		final int scaledHeight = scaledResolution.getScaledHeight();
+		GUI.createScaledResolution();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -262,8 +264,8 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 
 		if ((currentScreen = screen) != null) {
 			setIngameNotInFocus();
-			final ScaledResolution scaledResolution = new ScaledResolution(width, height);
-			screen.setWorldAndResolution(scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight());
+			GUI.createScaledResolution();
+			screen.updateWorldAndResolution();
 			skipRenderWorld = false;
 		} else
 			setIngameFocus();
@@ -767,8 +769,12 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 		if (currentScreen == null)
 			return;
 
-		final ScaledResolution scaledResolution = new ScaledResolution(width, height);
-		currentScreen.setWorldAndResolution(scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight());
+		GUI.createScaledResolution();
+		currentScreen.updateWorldAndResolution();
+	}
+	
+	public void resize(int width, int height) {
+		invoke(window, width, height);
 	}
 
 }

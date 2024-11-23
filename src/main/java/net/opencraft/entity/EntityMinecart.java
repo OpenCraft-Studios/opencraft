@@ -4,6 +4,7 @@ package net.opencraft.entity;
 import static org.joml.Math.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.opencraft.blocks.Block;
 import net.opencraft.inventory.IInventory;
@@ -84,7 +85,7 @@ public class EntityMinecart extends Entity implements IInventory {
 
 	@Override
 	public boolean canBeCollidedWith() {
-		return !this.isDead;
+		return !this.dead;
 	}
 
 	@Override
@@ -187,7 +188,7 @@ public class EntityMinecart extends Entity implements IInventory {
 			this.setPosition(this.x, this.y + this.yOffset, this.z);
 			double motionX = this.xd;
 			double motionZ = this.zd;
-			if (this.passenger != null) {
+			if (passenger.isPresent()) {
 				motionX *= 0.75;
 				motionZ *= 0.75;
 			}
@@ -284,13 +285,14 @@ public class EntityMinecart extends Entity implements IInventory {
 		if (entitiesWithinAABBExcludingEntity != null && entitiesWithinAABBExcludingEntity.size() > 0) {
 			for ( int i = 0; i < entitiesWithinAABBExcludingEntity.size(); ++i ) {
 				final Entity entity = (Entity) entitiesWithinAABBExcludingEntity.get(i);
-				if (entity != this.passenger && entity.canBePushed() && entity instanceof EntityMinecart) {
+				if (entity != passenger.get() && entity.canBePushed() && entity instanceof EntityMinecart) {
 					entity.applyEntityCollision(this);
 				}
 			}
 		}
-		if (this.passenger != null && this.passenger.isDead) {
-			this.passenger = null;
+		if (passenger.isPresent()) {
+			if (passenger.get().dead)
+				this.passenger = Optional.empty();
 		}
 	}
 
@@ -401,9 +403,9 @@ public class EntityMinecart extends Entity implements IInventory {
 
 	@Override
 	public void applyEntityCollision(final Entity entity) {
-		if (entity == this.passenger) {
+		if (entity == passenger.get())
 			return;
-		}
+		
 		double n = entity.x - this.x;
 		double n2 = entity.z - this.z;
 		double double1 = n * n + n2 * n2;
@@ -429,14 +431,14 @@ public class EntityMinecart extends Entity implements IInventory {
 				final double n6 = 0.0;
 				this.zd = n6;
 				this.xd = n6;
-				this.addVelocity(n4 - n, 0.0, n5 - n2);
+				this.addMotion(n4 - n, 0.0, n5 - n2);
 				final double n7 = 0.0;
 				entity.zd = n7;
 				entity.xd = n7;
-				entity.addVelocity(n4 + n, 0.0, n5 + n2);
+				entity.addMotion(n4 + n, 0.0, n5 + n2);
 			} else {
-				this.addVelocity(-n, 0.0, -n2);
-				entity.addVelocity(n / 4.0, 0.0, n2 / 4.0);
+				this.addMotion(-n, 0.0, -n2);
+				entity.addMotion(n / 4.0, 0.0, n2 / 4.0);
 			}
 		}
 	}

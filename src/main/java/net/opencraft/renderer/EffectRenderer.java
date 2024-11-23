@@ -40,7 +40,7 @@ public class EffectRenderer {
 			for (int j = 0; j < this.fxLayers[i].size(); ++j) {
 				final EntityFX entityFX = (EntityFX) this.fxLayers[i].get(j);
 				entityFX.onUpdate();
-				if (entityFX.isDead)
+				if (entityFX.dead)
 					this.fxLayers[i].remove(j--);
 			}
 		}

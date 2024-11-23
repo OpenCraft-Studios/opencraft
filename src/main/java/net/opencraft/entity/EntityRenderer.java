@@ -11,13 +11,14 @@ import java.nio.FloatBuffer;
 import java.util.List;
 import java.util.Random;
 
+import javax.vecmath.Color3f;
+
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
 
-import net.opencraft.ScaledResolution;
 import net.opencraft.blocks.Block;
-import net.opencraft.blocks.material.EnumMaterial;
+import net.opencraft.blocks.material.Material;
 import net.opencraft.client.input.MovingObjectPosition;
 import net.opencraft.item.ItemRenderer;
 import net.opencraft.renderer.EffectRenderer;
@@ -127,7 +128,7 @@ public class EntityRenderer {
 	private float getFOVModifier(final float float1) {
 		final EntityPlayerSP thePlayer = oc.player;
 		float n = oc.options.fov;
-		if (thePlayer.isInsideOfMaterial(EnumMaterial.WATER))
+		if (thePlayer.isInsideOfMaterial(Material.WATER))
 			n = 60.0f;
 		if (thePlayer.health <= 0)
 			n /= (1.0f - 500.0f / (thePlayer.deathTime + float1 + 500.0f)) * 2.0f + 1.0f;
@@ -267,10 +268,6 @@ public class EntityRenderer {
 			int directionY = oc.options.invertMouse.either(-1, 1);
 			final int n = scaledHeight;// + oc.mouseHelper.deltaX;
 			final int n2 = scaledWidth;// - oc.mouseHelper.deltaY;
-			if (scaledHeight != 0 || this.entityRendererInt1 != 0) {
-				// System.out.println("xxo: " + entityRendererInt1 + ", " + entityRendererInt1 +
-				// ": " + entityRendererInt1 + ", xo: " + n);
-			}
 			this.entityRendererInt1 = 0;
 			this.entityRendererInt2 = 0;
 
@@ -281,11 +278,12 @@ public class EntityRenderer {
 
 			oc.player.setAngles(n, n2 * directionY);
 		}
+
 		if (oc.skipRenderWorld)
 			return;
-		final ScaledResolution scaledResolution = new ScaledResolution(oc.width, oc.height);
-		final int scaledWidth = scaledResolution.getScaledWidth();
-		int scaledHeight = scaledResolution.getScaledHeight();
+
+		final int scaledWidth = oc.scaledWidth;
+		int scaledHeight = oc.scaledHeight;
 		final int n = (int) (oc.mouse.position.x * scaledWidth / oc.width);
 		final int n2 = (int) (scaledHeight - oc.mouse.position.y * scaledHeight / oc.height - 1);
 		if (oc.world != null) {
@@ -348,7 +346,7 @@ public class EntityRenderer {
 			RenderHelper.disableStandardItemLighting();
 			this.setupFog(0);
 			effectRenderer.renderParticles(player, float1);
-			if (oc.hitResult != null && player.isInsideOfMaterial(EnumMaterial.WATER)) {
+			if (oc.hitResult != null && player.isInsideOfMaterial(Material.WATER)) {
 				glDisable(GL_ALPHA_TEST);
 				renderGlobal.drawBlockBreaking(player, oc.hitResult, 0, player.inventory.getCurrentItem(), float1);
 				renderGlobal.drawSelectionBox(player, oc.hitResult, 0, player.inventory.getCurrentItem(), float1);
@@ -375,7 +373,7 @@ public class EntityRenderer {
 			glDepthMask(true);
 			glEnable(GL_CULL_FACE);
 			glDisable(GL_BLEND);
-			if (oc.hitResult != null && !player.isInsideOfMaterial(EnumMaterial.WATER)) {
+			if (oc.hitResult != null && !player.isInsideOfMaterial(Material.WATER)) {
 				glDisable(GL_ALPHA_TEST);
 				renderGlobal.drawBlockBreaking(player, oc.hitResult, 0, player.inventory.getCurrentItem(), float1);
 				renderGlobal.drawSelectionBox(player, oc.hitResult, 0, player.inventory.getCurrentItem(), float1);
@@ -455,7 +453,7 @@ public class EntityRenderer {
 						t.vertexUV(i + 1, n2, j + 1, 1.0f * n4, n2 * n4 / 8.0f + n5 * n4);
 						t.vertexUV(i + 1, n3, j + 1, 1.0f * n4, n3 * n4 / 8.0f + n5 * n4);
 						t.vertexUV(i + 0, n3, j + 0, 0.0f * n4, n3 * n4 / 8.0f + n5 * n4);
-					
+
 						t.vertexUV(i + 0, n2, j + 1, 0.0f * n4, n2 * n4 / 8.0f + n5 * n4);
 						t.vertexUV(i + 1, n2, j + 0, 1.0f * n4, n2 * n4 / 8.0f + n5 * n4);
 						t.vertexUV(i + 1, n3, j + 0, 1.0f * n4, n3 * n4 / 8.0f + n5 * n4);
@@ -469,39 +467,33 @@ public class EntityRenderer {
 	}
 
 	public void setupOverlayRendering() {
-		final ScaledResolution scaledResolution = new ScaledResolution(oc.width, oc.height);
-		final int scaledWidth = scaledResolution.getScaledWidth();
-		final int scaledHeight = scaledResolution.getScaledHeight();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0.0, scaledWidth, scaledHeight, 0.0, 1000.0, 3000.0);
+		glOrtho(0.0, oc.scaledWidth, oc.scaledHeight, 0.0, 1000.0, 3000.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glTranslatef(0.0f, 0.0f, -2000.0f);
 	}
 
 	private void updateFogColor(final float float1) {
-		final World theWorld = oc.world;
-		final EntityPlayerSP thePlayer = oc.player;
+		World world = oc.world;
+		final EntityPlayerSP player = oc.player;
 		float n = 1.0f / (4 - oc.options.renderDistance);
 		n = 1.0f - (float) Math.pow(n, 0.25);
-		final Vec3 skyColor = theWorld.getSkyColor(float1);
-		final float n2 = (float) skyColor.x;
-		final float n3 = (float) skyColor.y;
-		final float n4 = (float) skyColor.z;
-		final Vec3 fogColor = theWorld.getFogColor(float1);
+		Color3f skyColor = world.getSkyColor(float1);
+		Color3f fogColor = world.getFogColor(float1);
 		this.fogColorRed = (float) fogColor.x;
 		this.fogColorGreen = (float) fogColor.y;
 		this.fogColorBlue = (float) fogColor.z;
-		this.fogColorRed += (n2 - this.fogColorRed) * n;
-		this.fogColorGreen += (n3 - this.fogColorGreen) * n;
-		this.fogColorBlue += (n4 - this.fogColorBlue) * n;
-		if (thePlayer.isInsideOfMaterial(EnumMaterial.WATER)) {
+		this.fogColorRed += (skyColor.x - this.fogColorRed) * n;
+		this.fogColorGreen += (skyColor.y - this.fogColorGreen) * n;
+		this.fogColorBlue += (skyColor.z - this.fogColorBlue) * n;
+		if (player.isInsideOfMaterial(Material.WATER)) {
 			this.fogColorRed = 0.02f;
 			this.fogColorGreen = 0.02f;
 			this.fogColorBlue = 0.2f;
-		} else if (thePlayer.isInsideOfMaterial(EnumMaterial.LAVA)) {
+		} else if (player.isInsideOfMaterial(Material.LAVA)) {
 			this.fogColorRed = 0.6f;
 			this.fogColorGreen = 0.1f;
 			this.fogColorBlue = 0.0f;
@@ -527,7 +519,7 @@ public class EntityRenderer {
 		glFogfv(GL_FOG_COLOR, this.setFogColorBuffer(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, 1.0f));
 		glNormal3f(0.0f, -1.0f, 0.0f);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		if (player.isInsideOfMaterial(EnumMaterial.WATER)) {
+		if (player.isInsideOfMaterial(Material.WATER)) {
 			glFogi(GL_FOG_MODE, GL_EXP);
 			glFogf(GL_FOG_DENSITY, 0.1f);
 			float n = 0.4f;
@@ -541,7 +533,7 @@ public class EntityRenderer {
 				n2 = n5;
 				n3 = n6;
 			}
-		} else if (player.isInsideOfMaterial(EnumMaterial.LAVA)) {
+		} else if (player.isInsideOfMaterial(Material.LAVA)) {
 			glFogi(GL_FOG_MODE, GL_EXP);
 			glFogf(GL_FOG_DENSITY, 2.0f);
 			float n = 0.4f;
@@ -556,7 +548,7 @@ public class EntityRenderer {
 				n3 = n6;
 			}
 		} else {
-			glFogi(GL_FOG_MODE, GL_LINEAR); // TODO: you can modify how fog behaves, wow
+			glFogi(GL_FOG_MODE, GL_LINEAR); // you can modify how fog behaves, wow
 			glFogf(GL_FOG_START, this.farPlaneDistance * 0.25f);
 			glFogf(2916, this.farPlaneDistance);
 			if (integer < 0) {

@@ -51,7 +51,8 @@ public class WorldRenderer {
 		WorldRenderer.chunksUpdated = 0;
 	}
 
-	public WorldRenderer(final World fe, final List list, final int integer3, final int integer4, final int integer5, final int integer6, final int integer7) {
+	public WorldRenderer(final World fe, final List list, final int integer3, final int integer4, final int integer5,
+			final int integer6, final int integer7) {
 		this.C = -1;
 		this.isInFrustum = false;
 		this.p = new boolean[2];
@@ -88,9 +89,11 @@ public class WorldRenderer {
 		this.j = integer2 - this.m;
 		this.k = integer3 - this.n;
 		final float n = 2.0f;
-		this.v = AABB.getAABB(integer1 - n, integer2 - n, integer3 - n, integer1 + this.f + n, integer2 + this.g + n, integer3 + this.h + n);
+		this.v = AABB.getAABB(integer1 - n, integer2 - n, integer3 - n, integer1 + this.f + n, integer2 + this.g + n,
+				integer3 + this.h + n);
 		GL11.glNewList(this.C + 2, 4864);
-		Render.renderAABB(AABB.getAABBFromPool(this.l - n, this.m - n, this.n - n, this.l + this.f + n, this.m + this.g + n, this.n + this.h + n));
+		Render.renderAABB(AABB.getAABBFromPool(this.l - n, this.m - n, this.n - n, this.l + this.f + n,
+				this.m + this.g + n, this.n + this.h + n));
 		GL11.glEndList();
 		this.f();
 	}
@@ -110,7 +113,7 @@ public class WorldRenderer {
 		final int n = this.c + this.f;
 		final int n2 = this.d + this.g;
 		final int n3 = this.e + this.h;
-		for ( int i = 0; i < 2; ++i ) {
+		for (int i = 0; i < 2; ++i) {
 			this.p[i] = true;
 		}
 		Chunk.isLit = false;
@@ -120,13 +123,13 @@ public class WorldRenderer {
 		final int n4 = 1;
 		final ChunkCache iv = new ChunkCache(this.a, c - n4, d - n4, e - n4, n + n4, n2 + n4, n3 + n4);
 		final RenderBlocks renderBlocks = new RenderBlocks(iv);
-		for ( int j = 0; j < 2; ++j ) {
+		for (int j = 0; j < 2; ++j) {
 			boolean b = false;
 			boolean b2 = false;
 			int n5 = 0;
-			for ( int k = d; k < n2; ++k ) {
-				for ( int l = e; l < n3; ++l ) {
-					for ( int integer2 = c; integer2 < n; ++integer2 ) {
+			for (int k = d; k < n2; ++k) {
+				for (int l = e; l < n3; ++l) {
+					for (int integer2 = c; integer2 < n; ++integer2) {
 						final int blockId = iv.getBlockId(integer2, k, l);
 						if (blockId > 0) {
 							if (n5 == 0) {
@@ -191,7 +194,7 @@ public class WorldRenderer {
 	}
 
 	public void b() {
-		for ( int i = 0; i < 2; ++i ) {
+		for (int i = 0; i < 2; ++i) {
 			this.p[i] = true;
 		}
 		this.isInFrustum = false;

@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import net.opencraft.OpenCraft;
 import net.opencraft.client.input.MouseHandler;
 import net.opencraft.renderer.Tessellator;
 import net.opencraft.renderer.font.FontRenderer;
@@ -65,10 +64,10 @@ public abstract class GuiScreen extends GuiElement {
 	protected void actionPerformed(final GuiButton iq) {
 	}
 
-	public void setWorldAndResolution(final int integer2, final int integer3) {
+	public void updateWorldAndResolution() {
 		fontRenderer = oc.font;
-		width = integer2;
-		height = integer3;
+		this.width = oc.scaledWidth;
+		this.height = oc.scaledHeight;
 		this.initGui();
 	}
 

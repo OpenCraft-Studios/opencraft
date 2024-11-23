@@ -3,16 +3,19 @@ package net.opencraft.world;
 
 import static org.joml.Math.*;
 
+import java.awt.Color;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
+import javax.vecmath.Color3f;
+
 import net.opencraft.*;
 import net.opencraft.blocks.Block;
 import net.opencraft.blocks.LiquidBlock;
-import net.opencraft.blocks.material.EnumMaterial;
+import net.opencraft.blocks.material.Material;
 import net.opencraft.client.input.MovingObjectPosition;
 import net.opencraft.entity.Entity;
 import net.opencraft.nbt.NBTTagCompound;
@@ -32,15 +35,15 @@ public class World implements IBlockAccess {
 	private final List<MetadataChunkBlock> lightingToUpdate = new ArrayList<>();
 	private final List<Entity> loadedEntityList = new ArrayList<>();
 	private final List<Entity> unloadedEntityList = new ArrayList<>();
-	private final TreeSet scheduledTickTreeSet = new TreeSet<>();
-	private final Set scheduledTickSet = new HashSet<>();
-	public final List loadedTileEntityList = new ArrayList<>();
+	private final TreeSet<NextTickListEntry> scheduledTickTreeSet = new TreeSet<>();
+	private final Set<NextTickListEntry> scheduledTickSet = new HashSet<>();
+	public final List<TileEntity> loadedTileEntityList = new ArrayList<>();
 	public final List<IWorldAccess> worldAccesses = new ArrayList<>();
 	private final List<AABB> collidingBB = new ArrayList<>();
 	private final List<Entity> field_1012_M = new ArrayList<>();
 
 	public long time, seed, diskSize;
-	public long v, w;
+	public long skyColorRGB, fogColorRGB;
 	private long field_1019_F;
 	public int skylightSubtracted;
 	private int randInt, zz;
@@ -71,8 +74,8 @@ public class World implements IBlockAccess {
 
 	public World(File savesDir, String worldName, long seed) {
 		this.time = 0L;
-		this.v = 8961023L;
-		this.w = 12638463L;
+		this.skyColorRGB = 8961023L;
+		this.fogColorRGB = 12638463L;
 		this.field_1019_F = 0xFFFFFFL;
 		this.skylightSubtracted = 0;
 		this.randInt = new Random().nextInt();
@@ -289,10 +292,10 @@ public class World implements IBlockAccess {
 	}
 
 	@Override
-	public EnumMaterial getBlockMaterial(final int nya1, final int nya2, final int nya3) {
+	public Material getBlockMaterial(final int nya1, final int nya2, final int nya3) {
 		final int blockId = this.getBlockId(nya1, nya2, nya3);
 		if (blockId == 0) {
-			return EnumMaterial.AIR;
+			return Material.AIR;
 		}
 		return Block.BLOCKS[blockId].blockMaterial;
 	}
@@ -690,8 +693,8 @@ public class World implements IBlockAccess {
 				n *= volume;
 			}
 			if (this.player.getDistanceSqToEntity(entity) < n * n) {
-				((IWorldAccess) this.worldAccesses.get(i)).playSound(soundName, entity.x,
-						entity.y - entity.yOffset, entity.z, volume, pitch);
+				((IWorldAccess) this.worldAccesses.get(i)).playSound(soundName, entity.x, entity.y - entity.yOffset,
+						entity.z, volume, pitch);
 			}
 		}
 	}
@@ -797,21 +800,15 @@ public class World implements IBlockAccess {
 		return (int) (n * 11.0f);
 	}
 
-	public Vec3 getSkyColor(final float float1) {
-		float n = cos(this.getCelestialAngle(float1) * PI_TIMES_2_f) * 2.0f + 0.5f;
-		if (n < 0.0f) {
-			n = 0.0f;
+	public Color3f getSkyColor(final float float1) {
+		float n = cos(getCelestialAngle(float1) * PI_TIMES_2_f) * 2.0f + 0.5f;
+		n = clamp(0F, 1F, n);
+
+		Color3f color = new Color3f(new Color((int) skyColorRGB));
+		{
+			color.scale(n);
 		}
-		if (n > 1.0f) {
-			n = 1.0f;
-		}
-		float n2 = (this.v >> 16 & 0xFFL) / 255.0f;
-		float n3 = (this.v >> 8 & 0xFFL) / 255.0f;
-		float n4 = (this.v & 0xFFL) / 255.0f;
-		n2 *= n;
-		n3 *= n;
-		n4 *= n;
-		return Vec3.newTemp(n2, n3, n4);
+		return color;
 	}
 
 	public float getCelestialAngle(final float float1) {
@@ -845,21 +842,17 @@ public class World implements IBlockAccess {
 		return Vec3.newTemp(n2, n3, n4);
 	}
 
-	public Vec3 getFogColor(final float float1) {
+	public Color3f getFogColor(final float float1) {
 		float n = cos(this.getCelestialAngle(float1) * PI_TIMES_2_f) * 2.0f + 0.5f;
-		if (n < 0.0f) {
-			n = 0.0f;
+		n = clamp(0F, 1F, n);
+
+		Color3f color = new Color3f(new Color((int) fogColorRGB));
+		{
+			color.x *= n * 0.94f + 0.06f;
+			color.y *= n * 0.94f + 0.06f;
+			color.z *= n * 0.91f + 0.09f;
 		}
-		if (n > 1.0f) {
-			n = 1.0f;
-		}
-		float n2 = (this.w >> 16 & 0xFFL) / 255.0f;
-		float n3 = (this.w >> 8 & 0xFFL) / 255.0f;
-		float n4 = (this.w & 0xFFL) / 255.0f;
-		n2 *= n * 0.94f + 0.06f;
-		n3 *= n * 0.94f + 0.06f;
-		n4 *= n * 0.91f + 0.09f;
-		return Vec3.newTemp(n2, n3, n4);
+		return color;
 	}
 
 	public int findTopSolidBlock(final int integer1, final int integer2) {
@@ -892,36 +885,38 @@ public class World implements IBlockAccess {
 	}
 
 	public void updateEntities() {
-		this.loadedEntityList.removeAll((Collection) this.unloadedEntityList);
+		loadedEntityList.removeAll(unloadedEntityList);
+		
 		for (int i = 0; i < this.worldAccesses.size(); ++i) {
-			final IWorldAccess worldAccess = (IWorldAccess) this.worldAccesses.get(i);
-			for (int j = 0; j < this.unloadedEntityList.size(); ++j) {
-				worldAccess.releaseEntitySkin((Entity) this.unloadedEntityList.get(j));
-			}
+			final IWorldAccess worldAccess = worldAccesses.get(i);
+			for (int j = 0; j < this.unloadedEntityList.size(); ++j)
+				worldAccess.releaseEntitySkin(unloadedEntityList.get(j));
 		}
+		
 		this.unloadedEntityList.clear();
 		for (int i = 0; i < this.loadedEntityList.size(); ++i) {
 			final Entity entity = (Entity) this.loadedEntityList.get(i);
-			if (entity.ridingEntity != null) {
-				if (!entity.ridingEntity.isDead && entity.ridingEntity.passenger == entity) {
+			if (entity.ridingEntity.isPresent()) {
+				if (!entity.ridingEntity.get().isDead()
+						&& entity.ridingEntity.get().passenger.get() == entity)
 					continue;
-				}
-				entity.ridingEntity.passenger = null;
-				entity.ridingEntity = null;
+				
+				entity.ridingEntity.get().passenger = Optional.empty();
+				entity.ridingEntity = Optional.empty();
 			}
-			if (!entity.isDead) {
+			
+			if (!entity.dead)
 				this.updateEntity(entity);
-			}
-			if (entity.isDead) {
+			
+			if (entity.dead) {
 				final int j = Mth.floor_double(entity.x / 16.0);
 				final int floor_double = Mth.floor_double(entity.z / 16.0);
-				if (this.chunkExists(j, floor_double)) {
-					this.getChunkFromChunkCoords(j, floor_double).removeEntity(entity);
-				}
-				this.loadedEntityList.remove(i--);
-				for (int k = 0; k < this.worldAccesses.size(); ++k) {
+				if (chunkExists(j, floor_double))
+					getChunkFromChunkCoords(j, floor_double).removeEntity(entity);
+				
+				loadedEntityList.remove(i--);
+				for (int k = 0; k < this.worldAccesses.size(); ++k)
 					((IWorldAccess) this.worldAccesses.get(k)).releaseEntitySkin(entity);
-				}
 			}
 		}
 		for (int i = 0; i < this.loadedTileEntityList.size(); ++i) {
@@ -963,36 +958,32 @@ public class World implements IBlockAccess {
 				entity.setEntityDead();
 			}
 		}
-		if (entity.passenger != null) {
-			if (entity.passenger.isDead || entity.passenger.ridingEntity != entity) {
-				entity.passenger.ridingEntity = null;
-				entity.passenger = null;
+		if (entity.passenger.isPresent()) {
+			if (entity.passenger.get().isDead() || entity.passenger.get().ridingEntity.get() != entity) {
+				entity.passenger.get().ridingEntity = Optional.empty();
+				entity.passenger = Optional.empty();
 			} else {
-				this.updateEntity(entity.passenger);
+				updateEntity(entity.passenger.get());
 			}
 		}
-		if (Double.isNaN(entity.x) || Double.isInfinite(entity.x)) {
+
+		if (Double.isNaN(entity.x) || Double.isInfinite(entity.x))
 			entity.x = entity.lastTickPosX;
-		}
-		if (Double.isNaN(entity.y) || Double.isInfinite(entity.y)) {
+		if (Double.isNaN(entity.y) || Double.isInfinite(entity.y))
 			entity.y = entity.lastTickPosY;
-		}
-		if (Double.isNaN(entity.z) || Double.isInfinite(entity.z)) {
+		if (Double.isNaN(entity.z) || Double.isInfinite(entity.z))
 			entity.z = entity.lastTickPosZ;
-		}
-		if (Double.isNaN(entity.xRot) || Double.isInfinite(entity.xRot)) {
+		if (Double.isNaN(entity.xRot) || Double.isInfinite(entity.xRot))
 			entity.xRot = entity.prevRotationPitch;
-		}
-		if (Double.isNaN(entity.yRot) || Double.isInfinite(entity.yRot)) {
+		if (Double.isNaN(entity.yRot) || Double.isInfinite(entity.yRot))
 			entity.yRot = entity.prevRotationYaw;
-		}
 	}
 
 	public boolean checkIfAABBIsClear1(final AABB aabb) {
 		final List entitiesWithinAABBExcludingEntity = this.getEntitiesWithinAABBExcludingEntity(null, aabb);
 		for (int i = 0; i < entitiesWithinAABBExcludingEntity.size(); ++i) {
 			final Entity entity = (Entity) entitiesWithinAABBExcludingEntity.get(i);
-			if (!entity.isDead && entity.preventEntitySpawning) {
+			if (!entity.dead && entity.preventEntitySpawning) {
 				return false;
 			}
 		}
@@ -1048,7 +1039,7 @@ public class World implements IBlockAccess {
 		return false;
 	}
 
-	public boolean handleMaterialAcceleration(final AABB aabb, final EnumMaterial material, final Entity entity) {
+	public boolean handleMaterialAcceleration(final AABB aabb, final Material material, final Entity entity) {
 		final int floor_double = Mth.floor_double(aabb.minX);
 		final int floor_double2 = Mth.floor_double(aabb.maxX + 1.0);
 		final int floor_double3 = Mth.floor_double(aabb.minY);
@@ -1079,7 +1070,7 @@ public class World implements IBlockAccess {
 		return b;
 	}
 
-	public boolean isMaterialInBB(final AABB aabb, final EnumMaterial material) {
+	public boolean isMaterialInBB(final AABB aabb, final Material material) {
 		final int floor_double = Mth.floor_double(aabb.minX);
 		final int floor_double2 = Mth.floor_double(aabb.maxX + 1.0);
 		final int floor_double3 = Mth.floor_double(aabb.minY);
@@ -1350,8 +1341,8 @@ public class World implements IBlockAccess {
 		return list;
 	}
 
-	public List getLoadedEntityList() {
-		return this.loadedEntityList;
+	public List<Entity> getLoadedEntityList() {
+		return loadedEntityList;
 	}
 
 	public void func_698_b(final int xCoord, final int yCoord, final int zCoord) {
@@ -1416,8 +1407,7 @@ public class World implements IBlockAccess {
 		final int floor_double3 = Mth.floor_double(entity.z);
 		final int n = (int) (float5 + 32.0f);
 		return new Pathfinder(new ChunkCache(this, floor_double - n, floor_double2 - n, floor_double3 - n,
-				floor_double + n, floor_double2 + n, floor_double3 + n))
-				.createEntityPathTo(entity, x, y, z, float5);
+				floor_double + n, floor_double2 + n, floor_double3 + n)).createEntityPathTo(entity, x, y, z, float5);
 	}
 
 	public static NBTTagCompound potentiallySavesFolderLocation(final File file, final String string) {
@@ -1440,7 +1430,7 @@ public class World implements IBlockAccess {
 		File savesDir = new File(gameDir, "saves");
 		if (!savesDir.exists())
 			return 0;
-		
+
 		File[] children = savesDir.listFiles();
 		int countOfDirs = 0;
 		for (int i = 0; i < children.length; ++i) {
@@ -1454,25 +1444,24 @@ public class World implements IBlockAccess {
 		File file = new File(gameDir, "saves");
 		if (!file.exists())
 			return new String[0];
-		
+
 		File[] children = file.listFiles();
 		String[] saveNames = new String[children.length];
 		for (int i = 0; i < children.length; ++i) {
 			if (children[i].isDirectory())
 				saveNames[i] = children[i].getName();
 		}
-		
+
 		return saveNames;
 	}
 
 	public static void deleteWorldDir(File gameDir, final String worldName) {
 		Path worldPath = Path.of(gameDir.getPath(), "saves", worldName);
-	    try (Stream<Path> paths = Files.walk(worldPath)) {
-	        paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-	    } catch (IOException e) {
-	    	System.err.println("Failed to delete world: ".concat(e.getMessage()));
+		try (Stream<Path> paths = Files.walk(worldPath)) {
+			paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+		} catch (IOException e) {
+			System.err.println("Failed to delete world: ".concat(e.getMessage()));
 		}
 	}
-
 
 }

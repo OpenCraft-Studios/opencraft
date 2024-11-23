@@ -34,7 +34,7 @@ public class EntityTNTPrimed extends Entity {
 
 	@Override
 	public boolean canBeCollidedWith() {
-		return !this.isDead;
+		return !this.dead;
 	}
 
 	@Override

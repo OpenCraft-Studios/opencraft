@@ -35,7 +35,7 @@ public class RenderManager {
 	public static double renderPosY;
 	public static double renderPosZ;
 	public Renderer renderEngine;
-	public World worldObj;
+	public World world;
 	public Player livingPlayer;
 	public float playerViewY;
 	public float playerViewX;
@@ -80,7 +80,7 @@ public class RenderManager {
 	}
 
 	public void cacheActiveRenderInfo(World fe2, Renderer id2, FontRenderer ej2, Player gi2, GameSettings ja2, float f2) {
-		this.worldObj = fe2;
+		this.world = fe2;
 		this.renderEngine = id2;
 		this.options = ja2;
 		this.livingPlayer = gi2;
@@ -111,7 +111,7 @@ public class RenderManager {
 	}
 
 	public void func_852_a(World fe2) {
-		this.worldObj = fe2;
+		this.world = fe2;
 	}
 
 	public double func_851_a(double d, double d2, double d3) {

@@ -1,16 +1,18 @@
 
 package net.opencraft.renderer.entity;
 
+import static net.opencraft.OpenCraft.*;
 import static org.joml.Math.*;
 
 import java.nio.IntBuffer;
 import java.util.*;
 
+import javax.vecmath.Color3f;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
-import net.opencraft.OpenCraft;
-import net.opencraft.fi;
+import net.opencraft.DisplayListRenderer;
 import net.opencraft.blocks.Block;
 import net.opencraft.client.input.MovingObjectPosition;
 import net.opencraft.entity.*;
@@ -29,16 +31,15 @@ import net.opencraft.world.*;
 public class RenderGlobal implements IWorldAccess {
 
 	public List a;
-	private World k;
+	private World world;
 	private Renderer l;
-	private List m;
+	private List<WorldRenderer> m;
 	private WorldRenderer[] n;
 	private WorldRenderer[] o;
 	private int p;
 	private int q;
 	private int r;
 	private int s;
-	private OpenCraft t;
 	private RenderBlocks u;
 	private IntBuffer v;
 	private boolean w;
@@ -64,7 +65,7 @@ public class RenderGlobal implements IWorldAccess {
 	private int O;
 	private int P;
 	private List Q;
-	private fi[] R;
+	private DisplayListRenderer[] dlrs;
 	int d;
 	int e;
 	double f;
@@ -73,7 +74,7 @@ public class RenderGlobal implements IWorldAccess {
 	public float damagePartialTime;
 	int j;
 
-	public RenderGlobal(final OpenCraft aw, final Renderer id) {
+	public RenderGlobal(final Renderer id) {
 		this.a = new ArrayList<>();
 		this.m = new ArrayList<>();
 		this.w = false;
@@ -82,14 +83,13 @@ public class RenderGlobal implements IWorldAccess {
 		this.b = new int[50000];
 		this.c = BufferUtils.createIntBuffer(64);
 		this.Q = new ArrayList<>();
-		this.R = new fi[] { new fi(), new fi(), new fi(), new fi() };
+		this.dlrs = DisplayListRenderer.createFixedArray(4, 0x10000);
 		this.d = 0;
 		this.e = GLAllocation.generateDisplayLists(1);
 		this.f = -9999.0;
 		this.g = -9999.0;
 		this.h = -9999.0;
 		this.j = 0;
-		this.t = aw;
 		this.l = id;
 		final int n = 64;
 		this.s = GLAllocation.generateDisplayLists(n * n * n * 3);
@@ -112,8 +112,8 @@ public class RenderGlobal implements IWorldAccess {
 		final int n2 = 64;
 		final int n3 = 256 / n2 + 2;
 		float n4 = 16.0f;
-		for ( int i = -n2 * n3; i <= n2 * n3; i += n2 ) {
-			for ( int j = -n2 * n3; j <= n2 * n3; j += n2 ) {
+		for (int i = -n2 * n3; i <= n2 * n3; i += n2) {
+			for (int j = -n2 * n3; j <= n2 * n3; j += n2) {
 				t.beginQuads();
 				{
 					t.vertex(i + 0, n4, j + 0);
@@ -128,8 +128,8 @@ public class RenderGlobal implements IWorldAccess {
 		GL11.glNewList(this.A = this.y + 2, 4864);
 		n4 = -16.0f;
 		t.beginQuads();
-		for ( int i = -n2 * n3; i <= n2 * n3; i += n2 ) {
-			for ( int j = -n2 * n3; j <= n2 * n3; j += n2 ) {
+		for (int i = -n2 * n3; i <= n2 * n3; i += n2) {
+			for (int j = -n2 * n3; j <= n2 * n3; j += n2) {
 				t.vertex(i + n2, n4, j + 0);
 				t.vertex(i + 0, n4, j + 0);
 				t.vertex(i + 0, n4, j + n2);
@@ -144,7 +144,7 @@ public class RenderGlobal implements IWorldAccess {
 		final Random random = new Random(10842L);
 		final Tessellator t = Tessellator.instance;
 		t.beginQuads();
-		for ( int i = 0; i < 1500; ++i ) {
+		for (int i = 0; i < 1500; ++i) {
 			double n = random.nextFloat() * 2.0f - 1.0f;
 			double n2 = random.nextFloat() * 2.0f - 1.0f;
 			double n3 = random.nextFloat() * 2.0f - 1.0f;
@@ -167,7 +167,7 @@ public class RenderGlobal implements IWorldAccess {
 				final double n9 = random.nextDouble() * PI_TIMES_2;
 				final double sin3 = Math.sin(n9);
 				final double cos3 = Math.cos(n9);
-				for ( int j = 0; j < 4; ++j ) {
+				for (int j = 0; j < 4; ++j) {
 					final double n10 = 0.0;
 					final double n11 = ((j & 0x2) - 1) * n4;
 					final double n12 = ((j + 1 & 0x2) - 1) * n4;
@@ -184,14 +184,14 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	public void changeWorld(final World fe) {
-		if (this.k != null) {
-			this.k.removeWorldAccess(this);
+		if (this.world != null) {
+			this.world.removeWorldAccess(this);
 		}
 		this.f = -9999.0;
 		this.g = -9999.0;
 		this.h = -9999.0;
 		RenderManager.instance.func_852_a(fe);
-		this.k = fe;
+		this.world = fe;
 		this.u = new RenderBlocks(fe);
 		if (fe != null) {
 			fe.addWorldAccess(this);
@@ -200,10 +200,10 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	public void fancyGraphics() {
-		Block.leaves.setGraphicsLevel(this.t.options.fancyGraphics);
-		this.H = this.t.options.renderDistance;
+		Block.leaves.setGraphicsLevel(oc.options.fancyGraphics);
+		this.H = oc.options.renderDistance;
 		if (this.o != null) {
-			for ( int i = 0; i < this.o.length; ++i ) {
+			for (int i = 0; i < this.o.length; ++i) {
 				this.o[i].c();
 			}
 		}
@@ -224,17 +224,18 @@ public class RenderGlobal implements IWorldAccess {
 		this.E = this.p;
 		this.F = this.q;
 		this.G = this.r;
-		for ( int j = 0; j < this.m.size(); ++j ) {
+		for (int j = 0; j < this.m.size(); ++j) {
 			((WorldRenderer) this.m.get(j)).u = false;
 		}
 		this.m.clear();
-		for ( int j = 0; j < this.p; ++j ) {
-			for ( int k = 0; k < this.q; ++k ) {
-				for ( int l = 0; l < this.r; ++l ) {
+		for (int j = 0; j < this.p; ++j) {
+			for (int k = 0; k < this.q; ++k) {
+				for (int l = 0; l < this.r; ++l) {
 					if (this.o[(l * this.q + k) * this.p + j] != null) {
 						this.a.removeAll((Collection) this.o[(l * this.q + k) * this.p + j].B);
 					}
-					this.o[(l * this.q + k) * this.p + j] = new WorldRenderer(this.k, this.a, j * 16, k * 16, l * 16, 16, this.s + n);
+					this.o[(l * this.q + k) * this.p + j] = new WorldRenderer(this.world, this.a, j * 16, k * 16,
+							l * 16, 16, this.s + n);
 					if (this.w) {
 						this.o[(l * this.q + k) * this.p + j].z = this.v.get(n2);
 					}
@@ -249,48 +250,50 @@ public class RenderGlobal implements IWorldAccess {
 				}
 			}
 		}
-		if (this.k != null) {
-			final Entity player = this.k.player;
+		if (this.world != null) {
+			final Entity player = this.world.player;
 			this.b(Mth.floor_double(player.x), Mth.floor_double(player.y), Mth.floor_double(player.z));
 			Arrays.sort((Object[]) this.n, (Comparator) new EntitySorter(player));
 		}
 	}
 
 	public void renderEntities(final Vec3 bo, final ICamera jt, final float float3) {
-		TileEntityRenderer.instance.a(this.k, this.l, this.t.font, this.t.player, float3);
-		RenderManager.instance.cacheActiveRenderInfo(this.k, this.l, this.t.font, this.t.player, this.t.options, float3);
+		TileEntityRenderer.instance.a(this.world, this.l, oc.font, oc.player, float3);
+		RenderManager.instance.cacheActiveRenderInfo(this.world, this.l, oc.font, oc.player, oc.options, float3);
 		this.I = 0;
 		this.J = 0;
 		this.K = 0;
-		final Entity player = this.k.player;
+		final Entity player = this.world.player;
 		RenderManager.renderPosX = player.lastTickPosX + (player.x - player.lastTickPosX) * float3;
 		RenderManager.renderPosY = player.lastTickPosY + (player.y - player.lastTickPosY) * float3;
 		RenderManager.renderPosZ = player.lastTickPosZ + (player.z - player.lastTickPosZ) * float3;
 		TileEntityRenderer.b = player.lastTickPosX + (player.x - player.lastTickPosX) * float3;
 		TileEntityRenderer.c = player.lastTickPosY + (player.y - player.lastTickPosY) * float3;
 		TileEntityRenderer.d = player.lastTickPosZ + (player.z - player.lastTickPosZ) * float3;
-		final List loadedEntityList = this.k.getLoadedEntityList();
+		final List loadedEntityList = this.world.getLoadedEntityList();
 		this.I = loadedEntityList.size();
-		for ( int i = 0; i < loadedEntityList.size(); ++i ) {
+		for (int i = 0; i < loadedEntityList.size(); ++i) {
 			final Entity eq = (Entity) loadedEntityList.get(i);
 			if (eq.isInRangeToRenderVec3D(bo) && jt.isBoundingBoxInFrustum(eq.bb)) {
-				if (eq != this.k.player || this.t.options.thirdPersonView) {
+				if (eq != this.world.player || oc.options.thirdPersonView) {
 					++this.J;
 					RenderManager.instance.renderEntity(eq, float3);
 				}
 			}
 		}
-		for ( int i = 0; i < this.a.size(); ++i ) {
+		for (int i = 0; i < this.a.size(); ++i) {
 			TileEntityRenderer.instance.a((TileEntity) this.a.get(i), float3);
 		}
 	}
 
 	public String getDebugInfoRenders() {
-		return new StringBuilder().append("C: ").append(this.O).append("/").append(this.L).append(". F: ").append(this.M).append(", O: ").append(this.N).append(", E: ").append(this.P).toString();
+		return new StringBuilder().append("C: ").append(this.O).append("/").append(this.L).append(". F: ")
+				.append(this.M).append(", O: ").append(this.N).append(", E: ").append(this.P).toString();
 	}
 
 	public String getDebugInfoEntities() {
-		return new StringBuilder().append("E: ").append(this.J).append("/").append(this.I).append(". B: ").append(this.K).append(", I: ").append(this.I - this.K - this.J).toString();
+		return new StringBuilder().append("E: ").append(this.J).append("/").append(this.I).append(". B: ")
+				.append(this.K).append(", I: ").append(this.I - this.K - this.J).toString();
 	}
 
 	private void b(int integer1, int integer2, int integer3) {
@@ -305,7 +308,7 @@ public class RenderGlobal implements IWorldAccess {
 		this.G = Integer.MIN_VALUE;
 		final int n = this.p * 16;
 		final int n2 = n / 2;
-		for ( int i = 0; i < this.p; ++i ) {
+		for (int i = 0; i < this.p; ++i) {
 			int integer4 = i * 16;
 			int n3 = integer4 + n2 - integer1;
 			if (n3 < 0) {
@@ -319,7 +322,7 @@ public class RenderGlobal implements IWorldAccess {
 			if (integer4 > this.E) {
 				this.E = integer4;
 			}
-			for ( int j = 0; j < this.r; ++j ) {
+			for (int j = 0; j < this.r; ++j) {
 				int integer5 = j * 16;
 				int n4 = integer5 + n2 - integer3;
 				if (n4 < 0) {
@@ -333,7 +336,7 @@ public class RenderGlobal implements IWorldAccess {
 				if (integer5 > this.G) {
 					this.G = integer5;
 				}
-				for ( int k = 0; k < this.q; ++k ) {
+				for (int k = 0; k < this.q; ++k) {
 					final int integer6 = k * 16;
 					if (integer6 < this.C) {
 						this.C = integer6;
@@ -353,7 +356,7 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	public int sortAndRender(final Player gi, final int integer, final double double3) {
-		if (this.t.options.renderDistance != this.H) {
+		if (oc.options.renderDistance != this.H) {
 			this.fancyGraphics();
 		}
 		if (integer == 0) {
@@ -378,11 +381,11 @@ public class RenderGlobal implements IWorldAccess {
 		}
 		final int n7 = 0;
 		int n9;
-		if (this.w && !this.t.options.anaglyph.get() && integer == 0) {
+		if (this.w && !oc.options.anaglyph.get() && integer == 0) {
 			final int n8 = 0;
 			int i = 16;
 			this.a(n8, i);
-			for ( int j = n8; j < i; ++j ) {
+			for (int j = n8; j < i; ++j) {
 				this.n[j].x = true;
 			}
 			n9 = n7 + this.a(n8, i, integer, double3);
@@ -403,7 +406,7 @@ public class RenderGlobal implements IWorldAccess {
 				float n11 = 0.0f;
 				float n12 = 0.0f;
 				float n13 = 0.0f;
-				for ( int k = n10; k < i; ++k ) {
+				for (int k = n10; k < i; ++k) {
 					if (this.n[k].e()) {
 						this.n[k].isInFrustum = false;
 					} else {
@@ -441,7 +444,7 @@ public class RenderGlobal implements IWorldAccess {
 				GL11.glEnable(3008);
 				GL11.glEnable(2912);
 				n9 += this.a(n10, i, integer, double3);
-			} while(i < this.n.length);
+			} while (i < this.n.length);
 		} else {
 			n9 = n7 + this.a(0, this.n.length, integer, double3);
 		}
@@ -449,7 +452,7 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	private void a(final int integer1, final int integer2) {
-		for ( int i = integer1; i < integer2; ++i ) {
+		for (int i = integer1; i < integer2; ++i) {
 			if (this.n[i].y) {
 				this.c.clear();
 				ARBOcclusionQuery.glGetQueryObjectuivARB(this.n[i].z, 34919, this.c);
@@ -466,7 +469,7 @@ public class RenderGlobal implements IWorldAccess {
 	private int a(final int integer1, final int integer2, final int integer3, final double double4) {
 		this.Q.clear();
 		int n = 0;
-		for ( int i = integer1; i < integer2; ++i ) {
+		for (int i = integer1; i < integer2; ++i) {
 			if (integer3 == 0) {
 				++this.L;
 				if (this.n[i].p[integer3]) {
@@ -484,35 +487,36 @@ public class RenderGlobal implements IWorldAccess {
 				++n;
 			}
 		}
-		final EntityPlayerSP thePlayer = this.t.player;
+		final EntityPlayerSP thePlayer = oc.player;
 		final double double5 = thePlayer.lastTickPosX + (thePlayer.x - thePlayer.lastTickPosX) * double4;
 		final double double6 = thePlayer.lastTickPosY + (thePlayer.y - thePlayer.lastTickPosY) * double4;
 		final double double7 = thePlayer.lastTickPosZ + (thePlayer.z - thePlayer.lastTickPosZ) * double4;
 		int n2 = 0;
-		for ( int j = 0; j < this.R.length; ++j ) {
-			this.R[j].b();
+		for (int j = 0; j < this.dlrs.length; ++j) {
+			this.dlrs[j].reset();
 		}
-		for ( int j = 0; j < this.Q.size(); ++j ) {
+		for (int j = 0; j < this.Q.size(); ++j) {
 			final WorldRenderer worldRenderer = (WorldRenderer) this.Q.get(j);
 			int n3 = -1;
-			for ( int k = 0; k < n2; ++k ) {
-				if (this.R[k].a(worldRenderer.i, worldRenderer.j, worldRenderer.k)) {
+			for (int k = 0; k < n2; ++k) {
+				if (this.dlrs[k].isInitializedAt(worldRenderer.i, worldRenderer.j, worldRenderer.k)) {
 					n3 = k;
 				}
 			}
 			if (n3 < 0) {
 				n3 = n2++;
-				this.R[n3].a(worldRenderer.i, worldRenderer.j, worldRenderer.k, double5, double6, double7);
+				this.dlrs[n3].initialize(worldRenderer.i, worldRenderer.j, worldRenderer.k, (float) double5,
+						(float) double6, (float) double7);
 			}
-			this.R[n3].a(worldRenderer.a(integer3));
+			this.dlrs[n3].a(worldRenderer.a(integer3));
 		}
 		this.renderAllRenderLists(integer3, double4);
 		return n;
 	}
 
 	public void renderAllRenderLists(final int integer, final double double2) {
-		for ( int i = 0; i < this.R.length; ++i ) {
-			this.R[i].a();
+		for (int i = 0; i < this.dlrs.length; ++i) {
+			this.dlrs[i].render();
 		}
 	}
 
@@ -522,11 +526,11 @@ public class RenderGlobal implements IWorldAccess {
 
 	public void renderSky(final float float1) {
 		GL11.glDisable(3553);
-		final Vec3 skyColor = this.k.getSkyColor(float1);
+		final Color3f skyColor = world.getSkyColor(float1);
 		float n = (float) skyColor.x;
 		float n2 = (float) skyColor.y;
 		float n3 = (float) skyColor.z;
-		if (this.t.options.anaglyph.get()) {
+		if (oc.options.anaglyph.get()) {
 			final float n4 = (n * 30.0f + n2 * 59.0f + n3 * 11.0f) / 100.0f;
 			final float n5 = (n * 30.0f + n2 * 70.0f) / 100.0f;
 			final float n6 = (n * 30.0f + n3 * 70.0f) / 100.0f;
@@ -552,7 +556,7 @@ public class RenderGlobal implements IWorldAccess {
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GL11.glTranslatef(n5, n6, n7);
 		GL11.glRotatef(0.0f, 0.0f, 0.0f, 1.0f);
-		GL11.glRotatef(this.k.getCelestialAngle(float1) * 360.0f, 1.0f, 0.0f, 0.0f);
+		GL11.glRotatef(this.world.getCelestialAngle(float1) * 360.0f, 1.0f, 0.0f, 0.0f);
 		float n8 = 30.0f;
 		GL11.glBindTexture(3553, this.l.loadTexture("/assets/terrain/sun.png"));
 		t.beginQuads();
@@ -570,7 +574,7 @@ public class RenderGlobal implements IWorldAccess {
 		t.vertexUV(-n8, -100.0, -n8, 1.0, 0.0);
 		t.render();
 		GL11.glDisable(3553);
-		final float starBrightness = this.k.getStarBrightness(float1);
+		final float starBrightness = this.world.getStarBrightness(float1);
 		if (starBrightness > 0.0f) {
 			GL11.glColor4f(starBrightness, starBrightness, starBrightness, starBrightness);
 			GL11.glCallList(this.y);
@@ -588,23 +592,23 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	public void renderClouds(final float float1) {
-		if (this.t.options.fancyGraphics) {
+		if (oc.options.fancyGraphics) {
 			this.c(float1);
 			return;
 		}
 		GL11.glDisable(2884);
-		final float n = (float) (this.t.player.lastTickPosY + (this.t.player.y - this.t.player.lastTickPosY) * float1);
+		final float n = (float) (oc.player.lastTickPosY + (oc.player.y - oc.player.lastTickPosY) * float1);
 		final int n2 = 32;
 		final int n3 = 256 / n2;
 		final Tessellator t = Tessellator.instance;
 		GL11.glBindTexture(3553, this.l.loadTexture("/assets/clouds.png"));
 		GL11.glEnable(3042);
 		GL11.glBlendFunc(770, 771);
-		final Vec3 drawClouds = this.k.drawClouds(float1);
+		final Vec3 drawClouds = this.world.drawClouds(float1);
 		float float2 = (float) drawClouds.x;
 		float float3 = (float) drawClouds.y;
 		float float4 = (float) drawClouds.z;
-		if (this.t.options.anaglyph.get()) {
+		if (oc.options.anaglyph.get()) {
 			final float n4 = (float2 * 30.0f + float3 * 59.0f + float4 * 11.0f) / 100.0f;
 			final float n5 = (float2 * 30.0f + float3 * 70.0f) / 100.0f;
 			final float n6 = (float2 * 30.0f + float4 * 70.0f) / 100.0f;
@@ -613,8 +617,9 @@ public class RenderGlobal implements IWorldAccess {
 			float4 = n6;
 		}
 		final float n4 = 4.8828125E-4f;
-		double n7 = this.k.player.xo + (this.k.player.x - this.k.player.xo) * float1 + (this.x + float1) * 0.03f;
-		double n8 = this.k.player.zo + (this.k.player.z - this.k.player.zo) * float1;
+		double n7 = this.world.player.xo + (this.world.player.x - this.world.player.xo) * float1
+				+ (this.x + float1) * 0.03f;
+		double n8 = this.world.player.zo + (this.world.player.z - this.world.player.zo) * float1;
 		final int floor_double = Mth.floor_double(n7 / 2048.0);
 		final int floor_double2 = Mth.floor_double(n8 / 2048.0);
 		n7 -= floor_double * 2048;
@@ -624,8 +629,8 @@ public class RenderGlobal implements IWorldAccess {
 		final float n11 = (float) (n8 * n4);
 		t.beginQuads();
 		t.color(float2, float3, float4, 0.8f);
-		for ( int i = -n2 * n3; i < n2 * n3; i += n2 ) {
-			for ( int j = -n2 * n3; j < n2 * n3; j += n2 ) {
+		for (int i = -n2 * n3; i < n2 * n3; i += n2) {
+			for (int j = -n2 * n3; j < n2 * n3; j += n2) {
 				t.vertexUV(i + 0, n9, j + n2, (i + 0) * n4 + n10, (j + n2) * n4 + n11);
 				t.vertexUV(i + n2, n9, j + n2, (i + n2) * n4 + n10, (j + n2) * n4 + n11);
 				t.vertexUV(i + n2, n9, j + 0, (i + n2) * n4 + n10, (j + 0) * n4 + n11);
@@ -640,12 +645,14 @@ public class RenderGlobal implements IWorldAccess {
 
 	public void c(final float float1) {
 		GL11.glDisable(2884);
-		final float n = (float) (this.t.player.lastTickPosY + (this.t.player.y - this.t.player.lastTickPosY) * float1);
+		final float n = (float) (oc.player.lastTickPosY + (oc.player.y - oc.player.lastTickPosY) * float1);
 		final Tessellator t = Tessellator.instance;
 		final float n2 = 12.0f;
 		final float n3 = 4.0f;
-		double n4 = (this.k.player.xo + (this.k.player.x - this.k.player.xo) * float1 + (this.x + float1) * 0.03f) / n2;
-		double n5 = (this.k.player.zo + (this.k.player.z - this.k.player.zo) * float1) / n2 + 0.33000001311302185;
+		double n4 = (this.world.player.xo + (this.world.player.x - this.world.player.xo) * float1
+				+ (this.x + float1) * 0.03f) / n2;
+		double n5 = (this.world.player.zo + (this.world.player.z - this.world.player.zo) * float1) / n2
+				+ 0.33000001311302185;
 		final float n6 = 108.0f - n + 0.33f;
 		final int floor_double = Mth.floor_double(n4 / 2048.0);
 		final int floor_double2 = Mth.floor_double(n5 / 2048.0);
@@ -654,11 +661,11 @@ public class RenderGlobal implements IWorldAccess {
 		GL11.glBindTexture(3553, this.l.loadTexture("/assets/clouds.png"));
 		GL11.glEnable(3042);
 		GL11.glBlendFunc(770, 771);
-		final Vec3 drawClouds = this.k.drawClouds(float1);
+		final Vec3 drawClouds = this.world.drawClouds(float1);
 		float float2 = (float) drawClouds.x;
 		float float3 = (float) drawClouds.y;
 		float float4 = (float) drawClouds.z;
-		if (this.t.options.anaglyph.get()) {
+		if (oc.options.anaglyph.get()) {
 			final float n7 = (float2 * 30.0f + float3 * 59.0f + float4 * 11.0f) / 100.0f;
 			final float n8 = (float2 * 30.0f + float3 * 70.0f) / 100.0f;
 			final float n9 = (float2 * 30.0f + float4 * 70.0f) / 100.0f;
@@ -677,14 +684,14 @@ public class RenderGlobal implements IWorldAccess {
 		final int n13 = 3;
 		final float n14 = 9.765625E-4f;
 		GL11.glScalef(n2, 1.0f, n2);
-		for ( int i = 0; i < 2; ++i ) {
+		for (int i = 0; i < 2; ++i) {
 			if (i == 0) {
 				GL11.glColorMask(false, false, false, false);
 			} else {
 				GL11.glColorMask(true, true, true, true);
 			}
-			for ( int j = -n13 + 1; j <= n13; ++j ) {
-				for ( int k = -n13 + 1; k <= n13; ++k ) {
+			for (int j = -n13 + 1; j <= n13; ++j) {
+				for (int k = -n13 + 1; k <= n13; ++k) {
 					t.beginQuads();
 					final float n15 = (float) (j * n12);
 					final float n16 = (float) (k * n12);
@@ -704,44 +711,61 @@ public class RenderGlobal implements IWorldAccess {
 						t.vertexUV(n17 + 0.0f, n6 + n3 - n14, n18 + n12, (n15 + 0.0f) * n9 + n7, (n16 + n12) * n9 + n8);
 						t.vertexUV(n17 + n12, n6 + n3 - n14, n18 + n12, (n15 + n12) * n9 + n7, (n16 + n12) * n9 + n8);
 						t.vertexUV(n17 + n12, n6 + n3 - n14, n18 + 0.0f, (n15 + n12) * n9 + n7, (n16 + 0.0f) * n9 + n8);
-						t.vertexUV(n17 + 0.0f, n6 + n3 - n14, n18 + 0.0f, (n15 + 0.0f) * n9 + n7, (n16 + 0.0f) * n9 + n8);
+						t.vertexUV(n17 + 0.0f, n6 + n3 - n14, n18 + 0.0f, (n15 + 0.0f) * n9 + n7,
+								(n16 + 0.0f) * n9 + n8);
 					}
 					t.color(float2 * 0.9f, float3 * 0.9f, float4 * 0.9f, 0.8f);
 					if (j > -1) {
 						t.normal(-1.0f, 0.0f, 0.0f);
-						for ( int l = 0; l < n12; ++l ) {
-							t.vertexUV(n17 + l + 0.0f, n6 + 0.0f, n18 + n12, (n15 + l + 0.5f) * n9 + n7, (n16 + n12) * n9 + n8);
-							t.vertexUV(n17 + l + 0.0f, n6 + n3, n18 + n12, (n15 + l + 0.5f) * n9 + n7, (n16 + n12) * n9 + n8);
-							t.vertexUV(n17 + l + 0.0f, n6 + n3, n18 + 0.0f, (n15 + l + 0.5f) * n9 + n7, (n16 + 0.0f) * n9 + n8);
-							t.vertexUV(n17 + l + 0.0f, n6 + 0.0f, n18 + 0.0f, (n15 + l + 0.5f) * n9 + n7, (n16 + 0.0f) * n9 + n8);
+						for (int l = 0; l < n12; ++l) {
+							t.vertexUV(n17 + l + 0.0f, n6 + 0.0f, n18 + n12, (n15 + l + 0.5f) * n9 + n7,
+									(n16 + n12) * n9 + n8);
+							t.vertexUV(n17 + l + 0.0f, n6 + n3, n18 + n12, (n15 + l + 0.5f) * n9 + n7,
+									(n16 + n12) * n9 + n8);
+							t.vertexUV(n17 + l + 0.0f, n6 + n3, n18 + 0.0f, (n15 + l + 0.5f) * n9 + n7,
+									(n16 + 0.0f) * n9 + n8);
+							t.vertexUV(n17 + l + 0.0f, n6 + 0.0f, n18 + 0.0f, (n15 + l + 0.5f) * n9 + n7,
+									(n16 + 0.0f) * n9 + n8);
 						}
 					}
 					if (j <= 1) {
 						t.normal(1.0f, 0.0f, 0.0f);
-						for ( int l = 0; l < n12; ++l ) {
-							t.vertexUV(n17 + l + 1.0f - n14, n6 + 0.0f, n18 + n12, (n15 + l + 0.5f) * n9 + n7, (n16 + n12) * n9 + n8);
-							t.vertexUV(n17 + l + 1.0f - n14, n6 + n3, n18 + n12, (n15 + l + 0.5f) * n9 + n7, (n16 + n12) * n9 + n8);
-							t.vertexUV(n17 + l + 1.0f - n14, n6 + n3, n18 + 0.0f, (n15 + l + 0.5f) * n9 + n7, (n16 + 0.0f) * n9 + n8);
-							t.vertexUV(n17 + l + 1.0f - n14, n6 + 0.0f, n18 + 0.0f, (n15 + l + 0.5f) * n9 + n7, (n16 + 0.0f) * n9 + n8);
+						for (int l = 0; l < n12; ++l) {
+							t.vertexUV(n17 + l + 1.0f - n14, n6 + 0.0f, n18 + n12, (n15 + l + 0.5f) * n9 + n7,
+									(n16 + n12) * n9 + n8);
+							t.vertexUV(n17 + l + 1.0f - n14, n6 + n3, n18 + n12, (n15 + l + 0.5f) * n9 + n7,
+									(n16 + n12) * n9 + n8);
+							t.vertexUV(n17 + l + 1.0f - n14, n6 + n3, n18 + 0.0f, (n15 + l + 0.5f) * n9 + n7,
+									(n16 + 0.0f) * n9 + n8);
+							t.vertexUV(n17 + l + 1.0f - n14, n6 + 0.0f, n18 + 0.0f, (n15 + l + 0.5f) * n9 + n7,
+									(n16 + 0.0f) * n9 + n8);
 						}
 					}
 					t.color(float2 * 0.8f, float3 * 0.8f, float4 * 0.8f, 0.8f);
 					if (k > -1) {
 						t.normal(0.0f, 0.0f, -1.0f);
-						for ( int l = 0; l < n12; ++l ) {
-							t.vertexUV(n17 + 0.0f, n6 + n3, n18 + l + 0.0f, (n15 + 0.0f) * n9 + n7, (n16 + l + 0.5f) * n9 + n8);
-							t.vertexUV(n17 + n12, n6 + n3, n18 + l + 0.0f, (n15 + n12) * n9 + n7, (n16 + l + 0.5f) * n9 + n8);
-							t.vertexUV(n17 + n12, n6 + 0.0f, n18 + l + 0.0f, (n15 + n12) * n9 + n7, (n16 + l + 0.5f) * n9 + n8);
-							t.vertexUV(n17 + 0.0f, n6 + 0.0f, n18 + l + 0.0f, (n15 + 0.0f) * n9 + n7, (n16 + l + 0.5f) * n9 + n8);
+						for (int l = 0; l < n12; ++l) {
+							t.vertexUV(n17 + 0.0f, n6 + n3, n18 + l + 0.0f, (n15 + 0.0f) * n9 + n7,
+									(n16 + l + 0.5f) * n9 + n8);
+							t.vertexUV(n17 + n12, n6 + n3, n18 + l + 0.0f, (n15 + n12) * n9 + n7,
+									(n16 + l + 0.5f) * n9 + n8);
+							t.vertexUV(n17 + n12, n6 + 0.0f, n18 + l + 0.0f, (n15 + n12) * n9 + n7,
+									(n16 + l + 0.5f) * n9 + n8);
+							t.vertexUV(n17 + 0.0f, n6 + 0.0f, n18 + l + 0.0f, (n15 + 0.0f) * n9 + n7,
+									(n16 + l + 0.5f) * n9 + n8);
 						}
 					}
 					if (k <= 1) {
 						t.normal(0.0f, 0.0f, 1.0f);
-						for ( int l = 0; l < n12; ++l ) {
-							t.vertexUV(n17 + 0.0f, n6 + n3, n18 + l + 1.0f - n14, (n15 + 0.0f) * n9 + n7, (n16 + l + 0.5f) * n9 + n8);
-							t.vertexUV(n17 + n12, n6 + n3, n18 + l + 1.0f - n14, (n15 + n12) * n9 + n7, (n16 + l + 0.5f) * n9 + n8);
-							t.vertexUV(n17 + n12, n6 + 0.0f, n18 + l + 1.0f - n14, (n15 + n12) * n9 + n7, (n16 + l + 0.5f) * n9 + n8);
-							t.vertexUV(n17 + 0.0f, n6 + 0.0f, n18 + l + 1.0f - n14, (n15 + 0.0f) * n9 + n7, (n16 + l + 0.5f) * n9 + n8);
+						for (int l = 0; l < n12; ++l) {
+							t.vertexUV(n17 + 0.0f, n6 + n3, n18 + l + 1.0f - n14, (n15 + 0.0f) * n9 + n7,
+									(n16 + l + 0.5f) * n9 + n8);
+							t.vertexUV(n17 + n12, n6 + n3, n18 + l + 1.0f - n14, (n15 + n12) * n9 + n7,
+									(n16 + l + 0.5f) * n9 + n8);
+							t.vertexUV(n17 + n12, n6 + 0.0f, n18 + l + 1.0f - n14, (n15 + n12) * n9 + n7,
+									(n16 + l + 0.5f) * n9 + n8);
+							t.vertexUV(n17 + 0.0f, n6 + 0.0f, n18 + l + 1.0f - n14, (n15 + 0.0f) * n9 + n7,
+									(n16 + l + 0.5f) * n9 + n8);
 						}
 					}
 					t.render();
@@ -756,7 +780,7 @@ public class RenderGlobal implements IWorldAccess {
 	public boolean updateRenderers(final Player gi, final boolean boolean2) {
 		Collections.sort(this.m, new RenderSorter(gi));
 		final int n = this.m.size() - 1;
-		for ( int size = this.m.size(), i = 0; i < size; ++i ) {
+		for (int size = this.m.size(), i = 0; i < size; ++i) {
 			final WorldRenderer worldRenderer = (WorldRenderer) this.m.get(n - i);
 			if (!boolean2) {
 				if (worldRenderer.chunkIndex(gi) > 1024.0f) {
@@ -778,7 +802,8 @@ public class RenderGlobal implements IWorldAccess {
 		return this.m.size() == 0;
 	}
 
-	public void drawBlockBreaking(final Player gi, final MovingObjectPosition hb, final int integer, final ItemStack hw, final float float5) {
+	public void drawBlockBreaking(final Player gi, final MovingObjectPosition hb, final int integer, final ItemStack hw,
+			final float float5) {
 		final Tessellator t = Tessellator.instance;
 		GL11.glEnable(3042);
 		GL11.glEnable(3008);
@@ -790,13 +815,15 @@ public class RenderGlobal implements IWorldAccess {
 				GL11.glBindTexture(3553, this.l.loadTexture("/assets/terrain.png"));
 				GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
 				GL11.glPushMatrix();
-				final int n = this.k.getBlockId(hb.blockX, hb.blockY, hb.blockZ);
+				final int n = this.world.getBlockId(hb.blockX, hb.blockY, hb.blockZ);
 				Block stone = (n > 0) ? Block.BLOCKS[n] : null;
 				GL11.glDisable(3008);
 				GL11.glPolygonOffset(-3.0f, -3.0f);
 				GL11.glEnable(32823);
 				t.beginQuads();
-				t.setTranslationD(-(gi.lastTickPosX + (gi.x - gi.lastTickPosX) * float5), -(gi.lastTickPosY + (gi.y - gi.lastTickPosY) * float5), -(gi.lastTickPosZ + (gi.z - gi.lastTickPosZ) * float5));
+				t.setTranslationD(-(gi.lastTickPosX + (gi.x - gi.lastTickPosX) * float5),
+						-(gi.lastTickPosY + (gi.y - gi.lastTickPosY) * float5),
+						-(gi.lastTickPosZ + (gi.z - gi.lastTickPosZ) * float5));
 				t.c();
 				if (stone == null) {
 					stone = Block.stone;
@@ -827,7 +854,8 @@ public class RenderGlobal implements IWorldAccess {
 		GL11.glDisable(3008);
 	}
 
-	public void drawSelectionBox(final Player gi, final MovingObjectPosition hb, final int integer, final ItemStack hw, final float float5) {
+	public void drawSelectionBox(final Player gi, final MovingObjectPosition hb, final int integer, final ItemStack hw,
+			final float float5) {
 		if (integer == 0 && hb.typeOfHit == 0) {
 			GL11.glEnable(3042);
 			GL11.glBlendFunc(770, 771);
@@ -836,9 +864,12 @@ public class RenderGlobal implements IWorldAccess {
 			GL11.glDisable(3553);
 			GL11.glDepthMask(false);
 			final float n = 0.002f;
-			final int blockId = this.k.getBlockId(hb.blockX, hb.blockY, hb.blockZ);
+			final int blockId = this.world.getBlockId(hb.blockX, hb.blockY, hb.blockZ);
 			if (blockId > 0) {
-				this.a(Block.BLOCKS[blockId].getSelectedBoundingBoxFromPool(this.k, hb.blockX, hb.blockY, hb.blockZ).grow(n, n, n).getOffsetBoundingBox(-(gi.lastTickPosX + (gi.x - gi.lastTickPosX) * float5), -(gi.lastTickPosY + (gi.y - gi.lastTickPosY) * float5), -(gi.lastTickPosZ + (gi.z - gi.lastTickPosZ) * float5)));
+				this.a(Block.BLOCKS[blockId].getSelectedBoundingBoxFromPool(this.world, hb.blockX, hb.blockY, hb.blockZ)
+						.grow(n, n, n).getOffsetBoundingBox(-(gi.lastTickPosX + (gi.x - gi.lastTickPosX) * float5),
+								-(gi.lastTickPosY + (gi.y - gi.lastTickPosY) * float5),
+								-(gi.lastTickPosZ + (gi.z - gi.lastTickPosZ) * float5)));
 			}
 			GL11.glDepthMask(true);
 			GL11.glEnable(3553);
@@ -874,24 +905,25 @@ public class RenderGlobal implements IWorldAccess {
 		t.render();
 	}
 
-	public void a(final int integer1, final int integer2, final int integer3, final int integer4, final int integer5, final int integer6) {
+	public void a(final int integer1, final int integer2, final int integer3, final int integer4, final int integer5,
+			final int integer6) {
 		final int a = Math.floorDiv(integer1, 16);
 		final int a2 = Math.floorDiv(integer2, 16);
 		final int a3 = Math.floorDiv(integer3, 16);
 		final int a4 = Math.floorDiv(integer4, 16);
 		final int a5 = Math.floorDiv(integer5, 16);
 		final int a6 = Math.floorDiv(integer6, 16);
-		for ( int i = a; i <= a4; ++i ) {
+		for (int i = a; i <= a4; ++i) {
 			int n = i % this.p;
 			if (n < 0) {
 				n += this.p;
 			}
-			for ( int j = a2; j <= a5; ++j ) {
+			for (int j = a2; j <= a5; ++j) {
 				int n2 = j % this.q;
 				if (n2 < 0) {
 					n2 += this.q;
 				}
-				for ( int k = a3; k <= a6; ++k ) {
+				for (int k = a3; k <= a6; ++k) {
 					int n3 = k % this.r;
 					if (n3 < 0) {
 						n3 += this.r;
@@ -910,12 +942,13 @@ public class RenderGlobal implements IWorldAccess {
 		this.a(integer1 - 1, integer2 - 1, integer3 - 1, integer1 + 1, integer2 + 1, integer3 + 1);
 	}
 
-	public void markBlockRangeNeedsUpdate(final int integer1, final int integer2, final int integer3, final int integer4, final int integer5, final int integer6) {
+	public void markBlockRangeNeedsUpdate(final int integer1, final int integer2, final int integer3,
+			final int integer4, final int integer5, final int integer6) {
 		this.a(integer1 - 1, integer2 - 1, integer3 - 1, integer4 + 1, integer5 + 1, integer6 + 1);
 	}
 
 	public void clipRenderersByFrustrum(final ICamera jt, final float float2) {
-		for ( int i = 0; i < this.o.length; ++i ) {
+		for (int i = 0; i < this.o.length; ++i) {
 			if (!this.o[i].e() && (!this.o[i].isInFrustum || (i + this.j & 0xF) == 0x0)) {
 				this.o[i].a(jt);
 			}
@@ -923,48 +956,52 @@ public class RenderGlobal implements IWorldAccess {
 		++this.j;
 	}
 
-	public void playSound(final String soundName, final double xCoord, final double yCoord, final double zCoord, final float volume, final float pitch) {
-		this.t.sndManager.playSound(soundName, (float) xCoord, (float) yCoord, (float) zCoord, volume, pitch);
+	public void playSound(final String soundName, final double xCoord, final double yCoord, final double zCoord,
+			final float volume, final float pitch) {
+		oc.sndManager.playSound(soundName, (float) xCoord, (float) yCoord, (float) zCoord, volume, pitch);
 	}
 
-	public void spawnParticle(final String particle, final double xCoordBlock, final double yCoordBlock, final double zCoordBlock, final double xPosition, final double yPosition, final double zPosition) {
-		final double n = this.k.player.x - xCoordBlock;
-		final double n2 = this.k.player.y - yCoordBlock;
-		final double n3 = this.k.player.z - zCoordBlock;
+	public void spawnParticle(final String particle, final double xCoordBlock, final double yCoordBlock,
+			final double zCoordBlock, final double xPosition, final double yPosition, final double zPosition) {
+		final double n = this.world.player.x - xCoordBlock;
+		final double n2 = this.world.player.y - yCoordBlock;
+		final double n3 = this.world.player.z - zCoordBlock;
 		if (n * n + n2 * n2 + n3 * n3 > 256.0) {
 			return;
 		}
 		if (particle == "bubble") {
-			this.t.effectRenderer.addEffect(new EntityBubbleFX(this.k, xCoordBlock, yCoordBlock, zCoordBlock, xPosition, yPosition, zPosition));
+			oc.effectRenderer.addEffect(new EntityBubbleFX(this.world, xCoordBlock, yCoordBlock, zCoordBlock, xPosition,
+					yPosition, zPosition));
 		} else if (particle == "smoke") {
-			this.t.effectRenderer.addEffect(new EntitySmokeFX(this.k, xCoordBlock, yCoordBlock, zCoordBlock));
+			oc.effectRenderer.addEffect(new EntitySmokeFX(this.world, xCoordBlock, yCoordBlock, zCoordBlock));
 		} else if (particle == "explode") {
-			this.t.effectRenderer.addEffect(new EntityExplodeFX(this.k, xCoordBlock, yCoordBlock, zCoordBlock, xPosition, yPosition, zPosition));
+			oc.effectRenderer.addEffect(new EntityExplodeFX(this.world, xCoordBlock, yCoordBlock, zCoordBlock,
+					xPosition, yPosition, zPosition));
 		} else if (particle == "flame") {
-			this.t.effectRenderer.addEffect(new EntityFlameFX(this.k, xCoordBlock, yCoordBlock, zCoordBlock, xPosition, yPosition, zPosition));
+			oc.effectRenderer.addEffect(new EntityFlameFX(this.world, xCoordBlock, yCoordBlock, zCoordBlock, xPosition,
+					yPosition, zPosition));
 		} else if (particle == "lava") {
-			this.t.effectRenderer.addEffect(new EntityLavaFX(this.k, xCoordBlock, yCoordBlock, zCoordBlock));
+			oc.effectRenderer.addEffect(new EntityLavaFX(this.world, xCoordBlock, yCoordBlock, zCoordBlock));
 		} else if (particle == "splash") {
-			this.t.effectRenderer.addEffect(new EntitySplashFX(this.k, xCoordBlock, yCoordBlock, zCoordBlock, xPosition, yPosition, zPosition));
+			oc.effectRenderer.addEffect(new EntitySplashFX(this.world, xCoordBlock, yCoordBlock, zCoordBlock, xPosition,
+					yPosition, zPosition));
 		} else if (particle == "largesmoke") {
-			this.t.effectRenderer.addEffect(new EntitySmokeFX(this.k, xCoordBlock, yCoordBlock, zCoordBlock, 2.5f));
+			oc.effectRenderer.addEffect(new EntitySmokeFX(this.world, xCoordBlock, yCoordBlock, zCoordBlock, 2.5f));
 		}
 	}
 
 	public void obtainEntitySkin(final Entity entity) {
-		if (entity.skinUrl != null) {
+		if (entity.skinUrl != null)
 			this.l.registerNewTextureHolder(entity.skinUrl, new ImageProvider());
-		}
 	}
 
 	public void releaseEntitySkin(final Entity entity) {
-		if (entity.skinUrl != null) {
+		if (entity.skinUrl != null)
 			this.l.deleteTextureIfUnused(entity.skinUrl);
-		}
 	}
 
 	public void updateAllRenderers() {
-		for ( int i = 0; i < this.o.length; ++i ) {
+		for (int i = 0; i < this.o.length; ++i) {
 			if (this.o[i].A) {
 				if (!this.o[i].u) {
 					this.m.add(this.o[i]);

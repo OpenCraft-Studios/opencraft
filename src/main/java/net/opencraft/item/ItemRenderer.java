@@ -6,7 +6,7 @@ import static org.joml.Math.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import net.opencraft.blocks.Block;
-import net.opencraft.blocks.material.EnumMaterial;
+import net.opencraft.blocks.material.Material;
 import net.opencraft.entity.EntityPlayerSP;
 import net.opencraft.renderer.Tessellator;
 import net.opencraft.renderer.entity.*;
@@ -227,7 +227,7 @@ public class ItemRenderer {
 				this.a(float1, Block.BLOCKS[blockId].getBlockTextureFromSide(2));
 			}
 		}
-		if (oc.player.isInsideOfMaterial(EnumMaterial.WATER)) {
+		if (oc.player.isInsideOfMaterial(Material.WATER)) {
 			final int xCoord = oc.renderer.loadTexture("/assets/water.png");
 			glBindTexture(3553, xCoord);
 			this.c(float1);

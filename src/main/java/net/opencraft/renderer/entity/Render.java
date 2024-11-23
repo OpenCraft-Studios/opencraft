@@ -120,7 +120,7 @@ public abstract class Render<T extends Entity> {
 	}
 
 	private World getWorldFromRenderManager() {
-		return this.renderManager.worldObj;
+		return this.renderManager.world;
 	}
 
 	private void renderShadowOnBlock(final Block gs, final double double2, final double double3, final double double4,

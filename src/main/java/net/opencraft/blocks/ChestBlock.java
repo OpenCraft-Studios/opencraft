@@ -3,7 +3,7 @@ package net.opencraft.blocks;
 
 import java.util.Random;
 
-import net.opencraft.blocks.material.EnumMaterial;
+import net.opencraft.blocks.material.Material;
 import net.opencraft.entity.EntityItem;
 import net.opencraft.entity.Player;
 import net.opencraft.inventory.IInventory;
@@ -19,7 +19,7 @@ public class ChestBlock extends ContainerBlock {
 	private final Random random;
 
 	protected ChestBlock(final int blockid) {
-		super(blockid, EnumMaterial.WOOD);
+		super(blockid, Material.WOOD);
 		this.random = new Random();
 		this.blockIndexInTexture = 26;
 	}

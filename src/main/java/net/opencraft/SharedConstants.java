@@ -1,7 +1,5 @@
 package net.opencraft;
 
-import static net.opencraft.SharedConstants.*;
-
 import java.io.*;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -15,7 +13,7 @@ import java.util.zip.ZipInputStream;
 import net.opencraft.client.Main;
 import net.opencraft.client.ResourcesDescriptor;
 
-public class SharedConstants {
+public final class SharedConstants {
 
 	public static final ResourcesDescriptor RESOURCES = describeResources();
 	public static final String GIT_INFO = "git.properties";

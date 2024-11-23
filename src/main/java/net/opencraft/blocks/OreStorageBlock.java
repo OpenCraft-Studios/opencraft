@@ -1,12 +1,12 @@
 
 package net.opencraft.blocks;
 
-import net.opencraft.blocks.material.EnumMaterial;
+import net.opencraft.blocks.material.Material;
 
 public class OreStorageBlock extends Block {
 
 	public OreStorageBlock(final int blockid, final int blockIndexInTexture) {
-		super(blockid, EnumMaterial.METAL);
+		super(blockid, Material.METAL);
 		this.blockIndexInTexture = blockIndexInTexture;
 	}
 

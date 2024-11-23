@@ -1,17 +1,14 @@
-
 package net.opencraft.renderer.entity;
-
-import net.opencraft.OpenCraft;
-import net.opencraft.blocks.*;
-import net.opencraft.blocks.material.EnumMaterial;
-import net.opencraft.renderer.Tessellator;
-import net.opencraft.util.Mth;
-import net.opencraft.world.IBlockAccess;
-import net.opencraft.world.World;
 
 import static org.joml.Math.*;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
+
+import net.opencraft.blocks.*;
+import net.opencraft.blocks.material.Material;
+import net.opencraft.renderer.Tessellator;
+import net.opencraft.world.IBlockAccess;
+import net.opencraft.world.World;
 
 public class RenderBlocks {
 
@@ -109,6 +106,7 @@ public class RenderBlocks {
 		}
 		final float blockBrightness = gs.getBlockBrightness(this.a, integer2, integer3, integer4);
 		t.color(blockBrightness, blockBrightness, blockBrightness);
+		// TODO: rename variables and convert to array
 		final int n2 = (n & 0xF) << 4;
 		final int n3 = n & 0xF0;
 		double n4 = n2 / 256.0f;
@@ -610,7 +608,7 @@ public class RenderBlocks {
 		final float n4 = 0.6f;
 		final double minY = 0.0;
 		final double maxY = 1.0;
-		final EnumMaterial blockMaterial = gs.blockMaterial;
+		final Material blockMaterial = gs.blockMaterial;
 		final int blockMetadata = this.a.getBlockMetadata(integer2, integer3, integer4);
 		final float a = this.a(integer2, integer3, integer4, blockMaterial);
 		final float a2 = this.a(integer2, integer3, integer4 + 1, blockMaterial);
@@ -727,7 +725,7 @@ public class RenderBlocks {
 		return b;
 	}
 
-	private float a(final int integer1, final int integer2, final int integer3, final EnumMaterial jy) {
+	private float a(final int integer1, final int integer2, final int integer3, final Material jy) {
 		int n = 0;
 		float n2 = 0.0f;
 		for ( int i = 0; i < 4; ++i ) {
@@ -736,7 +734,7 @@ public class RenderBlocks {
 			if (this.a.getBlockMaterial(xCoord, integer2 + 1, zCoord) == jy) {
 				return 1.0f;
 			}
-			final EnumMaterial blockMaterial = this.a.getBlockMaterial(xCoord, integer2, zCoord);
+			final Material blockMaterial = this.a.getBlockMaterial(xCoord, integer2, zCoord);
 			if (blockMaterial == jy) {
 				final int blockMetadata = this.a.getBlockMetadata(xCoord, integer2, zCoord);
 				if (blockMetadata >= 8 || blockMetadata == 0) {
@@ -1269,7 +1267,7 @@ public class RenderBlocks {
 		final Tessellator t = Tessellator.instance;
 		final int renderType = gs.getRenderType();
 		if (renderType == 0) {
-			GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
+			glTranslatef(-0.5f, -0.5f, -0.5f);
 			t.beginQuads();
 			t.normal(0.0f, -1.0f, 0.0f);
 			this.a(gs, 0.0, 0.0, 0.0, gs.getBlockTextureFromSide(0));
@@ -1294,7 +1292,7 @@ public class RenderBlocks {
 			t.normal(1.0f, 0.0f, 0.0f);
 			this.f(gs, 0.0, 0.0, 0.0, gs.getBlockTextureFromSide(5));
 			t.render();
-			GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+			glTranslatef(0.5f, 0.5f, 0.5f);
 		} else if (renderType == 1) {
 			t.beginQuads();
 			t.normal(0.0f, -1.0f, 0.0f);

@@ -3,14 +3,14 @@ package net.opencraft.blocks;
 
 import java.util.Random;
 
-import net.opencraft.blocks.material.EnumMaterial;
+import net.opencraft.blocks.material.Material;
 import net.opencraft.physics.AABB;
 import net.opencraft.world.World;
 
 public class FlowerBlock extends Block {
 
 	protected FlowerBlock(final int blockid, final int blockIndexInTexture) {
-		super(blockid, EnumMaterial.PLANTS);
+		super(blockid, Material.PLANTS);
 		this.blockIndexInTexture = blockIndexInTexture;
 		this.setTickOnLoad(true);
 		final float n = 0.2f;

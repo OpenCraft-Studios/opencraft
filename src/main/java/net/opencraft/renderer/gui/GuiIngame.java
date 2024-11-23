@@ -10,7 +10,7 @@ import java.util.*;
 import org.lwjgl.opengl.GL11;
 
 import net.opencraft.*;
-import net.opencraft.blocks.material.EnumMaterial;
+import net.opencraft.blocks.material.Material;
 import net.opencraft.inventory.InventoryPlayer;
 import net.opencraft.item.ItemStack;
 import net.opencraft.renderer.Tessellator;
@@ -42,26 +42,23 @@ public class GuiIngame extends GuiElement {
 	}
 
 	public void renderGameOverlay(final float float1, final boolean boolean2, final int integer3, final int integer4) {
-		final ScaledResolution scaledResolution = new ScaledResolution(this.mc.width, this.mc.height);
-		final int scaledWidth = scaledResolution.getScaledWidth();
-		final int scaledHeight = scaledResolution.getScaledHeight();
 		final FontRenderer font = this.mc.font;
 		this.mc.entityRenderer.setupOverlayRendering();
 		GL11.glEnable(3042);
 		if (this.mc.options.fancyGraphics) {
-			this.renderVignette(this.mc.player.getEntityBrightness(float1), scaledWidth, scaledHeight);
+			this.renderVignette(this.mc.player.getEntityBrightness(float1), oc.scaledWidth, oc.scaledHeight);
 		}
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GL11.glBindTexture(3553, this.mc.renderer.loadTexture("/assets/gui/gui.png"));
 		final InventoryPlayer inventory = this.mc.player.inventory;
 		this.zLevel = -90.0f;
-		this.drawTexturedModalRect(scaledWidth / 2 - 91, scaledHeight - 22, 0, 0, 182, 22);
-		this.drawTexturedModalRect(scaledWidth / 2 - 91 - 1 + inventory.currentItem * 20, scaledHeight - 22 - 1, 0, 22,
+		this.drawTexturedModalRect(oc.scaledWidth / 2 - 91, oc.scaledHeight - 22, 0, 0, 182, 22);
+		this.drawTexturedModalRect(oc.scaledWidth / 2 - 91 - 1 + inventory.currentItem * 20, oc.scaledHeight - 22 - 1, 0, 22,
 				24, 22);
 		GL11.glBindTexture(3553, this.mc.renderer.loadTexture("/assets/gui/icons.png"));
 		GL11.glEnable(3042);
 		GL11.glBlendFunc(775, 769);
-		this.drawTexturedModalRect(scaledWidth / 2 - 7, scaledHeight / 2 - 7, 0, 0, 16, 16);
+		this.drawTexturedModalRect(oc.scaledWidth / 2 - 7, oc.scaledHeight / 2 - 7, 0, 0, 16, 16);
 		GL11.glDisable(3042);
 		boolean b = this.mc.player.heartsLife / 3 % 2 == 1;
 		if (this.mc.player.heartsLife < 10) {
@@ -73,9 +70,9 @@ public class GuiIngame extends GuiElement {
 		if (this.mc.playerController.shouldDrawHUD()) {
 			final int i = this.mc.player.getPlayerArmorValue();
 			for (int j = 0; j < 10; ++j) {
-				int integer5 = scaledHeight - 32;
+				int integer5 = oc.scaledHeight - 32;
 				if (i > 0) {
-					final int integer6 = scaledWidth / 2 + 91 - j * 8 - 9;
+					final int integer6 = oc.scaledWidth / 2 + 91 - j * 8 - 9;
 					if (j * 2 + 1 < i) {
 						this.drawTexturedModalRect(integer6, integer5, 34, 9, 9, 9);
 					}
@@ -87,10 +84,8 @@ public class GuiIngame extends GuiElement {
 					}
 				}
 				int n = 0;
-				if (b) {
-					n = 1;
-				}
-				final int integer7 = scaledWidth / 2 - 91 + j * 8;
+				if (b) n = 1;
+				final int integer7 = oc.scaledWidth / 2 - 91 + j * 8;
 				if (health <= 4) {
 					integer5 += this.rand.nextInt(2);
 				}
@@ -110,13 +105,13 @@ public class GuiIngame extends GuiElement {
 					this.drawTexturedModalRect(integer7, integer5, 61, 0, 9, 9);
 				}
 			}
-			if (this.mc.player.isInsideOfMaterial(EnumMaterial.WATER)) {
+			if (this.mc.player.isInsideOfMaterial(Material.WATER)) {
 				for (int j = (int) ceil((this.mc.player.air - 2) * 10.0 / 300.0),
 						integer5 = (int) ceil(this.mc.player.air * 10.0 / 300.0) - j, k = 0; k < j + integer5; ++k) {
 					if (k < j) {
-						this.drawTexturedModalRect(scaledWidth / 2 - 91 + k * 8, scaledHeight - 32 - 9, 16, 18, 9, 9);
+						this.drawTexturedModalRect(oc.scaledWidth / 2 - 91 + k * 8, oc.scaledHeight - 32 - 9, 16, 18, 9, 9);
 					} else {
-						this.drawTexturedModalRect(scaledWidth / 2 - 91 + k * 8, scaledHeight - 32 - 9, 25, 18, 9, 9);
+						this.drawTexturedModalRect(oc.scaledWidth / 2 - 91 + k * 8, oc.scaledHeight - 32 - 9, 25, 18, 9, 9);
 					}
 				}
 			}
@@ -128,8 +123,8 @@ public class GuiIngame extends GuiElement {
 		RenderHelper.enableStandardItemLighting();
 		GL11.glPopMatrix();
 		for (int i = 0; i < 9; ++i) {
-			final int j = scaledWidth / 2 - 90 + i * 20 + 2;
-			final int integer5 = scaledHeight - 16 - 3;
+			final int j = oc.scaledWidth / 2 - 90 + i * 20 + 2;
+			final int integer5 = oc.scaledHeight - 16 - 3;
 			this.renderInventorySlot(i, j, integer5, float1);
 		}
 		RenderHelper.disableStandardItemLighting();
@@ -148,10 +143,10 @@ public class GuiIngame extends GuiElement {
 			final long allocatedMemory = totalMemory - Runtime.getRuntime().freeMemory();
 			final String string = "Used memory: " + allocatedMemory * 100L / maxMemory + "% ("
 					+ allocatedMemory / 1024L / 1024L + "MB) of " + maxMemory / 1024L / 1024L + "MB";
-			this.drawString(font, string, scaledWidth - font.width(string) - 2, 2, 14737632);
+			this.drawString(font, string, oc.scaledWidth - font.width(string) - 2, 2, 14737632);
 			final String string2 = "Allocated memory: " + totalMemory * 100L / maxMemory + "% ("
 					+ totalMemory / 1024L / 1024L + "MB)";
-			this.drawString(font, string2, scaledWidth - font.width(string2) - 2, 12, 14737632);
+			this.drawString(font, string2, oc.scaledWidth - font.width(string2) - 2, 12, 14737632);
 		}
 
 		int i = 10;
@@ -159,7 +154,7 @@ public class GuiIngame extends GuiElement {
 		for (int integer5 = 0; integer5 < this.chatMessageList.size() && integer5 < i; ++integer5) {
 			if ((chatMessageList.get(integer5)).updateCounter < 200 || b2) {
 				font.drawShadow(((ChatLine) this.chatMessageList.get(integer5)).message, 2,
-						scaledHeight - 8 - integer5 * 9 - 20, 0xFFFFFF);
+						oc.scaledHeight - 8 - integer5 * 9 - 20, 0xFFFFFF);
 			}
 		}
 	}

@@ -4,7 +4,7 @@ package net.opencraft;
 import java.awt.image.BufferedImage;
 import net.opencraft.world.World;
 
-public class IsoImageBuffer {
+class IsoImageBuffer {
 
 	public BufferedImage field_1348_a;
 	public World worldObj;
