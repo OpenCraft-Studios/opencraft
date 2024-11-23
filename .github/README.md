@@ -124,7 +124,7 @@ java -jar target/opencraft.jar
 
 <br />
 
-## 👷‍♂️ Contributors
+##### 👷‍♂️ Contributors
 | [![CiroZDP](https://avatars.githubusercontent.com/u/161502824?v=4)](https://github.com/CiroZDP) | ![Community](https://cdni.iconscout.com/illustration/free/thumb/free-community-2103591-1768087.png)	|
 |:-----------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|
 |                                           **CiroZDP**                                           |                                          **The community**                                          |
