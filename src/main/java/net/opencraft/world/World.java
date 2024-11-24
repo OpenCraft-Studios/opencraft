@@ -940,7 +940,7 @@ public class World implements IBlockAccess {
 		final int floor_double3 = Mth.floor_double(entity.x / 16.0);
 		final int floor_double4 = Mth.floor_double(entity.y / 16.0);
 		final int floor_double5 = Mth.floor_double(entity.z / 16.0);
-		if (entity.ridingEntity != null) {
+		if (entity.ridingEntity.isPresent()) {
 			entity.updateRidden();
 		} else {
 			entity.onUpdate();
@@ -959,11 +959,12 @@ public class World implements IBlockAccess {
 			}
 		}
 		if (entity.passenger.isPresent()) {
-			if (entity.passenger.get().isDead() || entity.passenger.get().ridingEntity.get() != entity) {
-				entity.passenger.get().ridingEntity = Optional.empty();
+			var passenger = entity.passenger.get();
+			if (passenger.isDead() || passenger.ridingEntity.get() != entity) {
+				passenger.ridingEntity = Optional.empty();
 				entity.passenger = Optional.empty();
 			} else {
-				updateEntity(entity.passenger.get());
+				updateEntity(passenger);
 			}
 		}
 
@@ -980,9 +981,9 @@ public class World implements IBlockAccess {
 	}
 
 	public boolean checkIfAABBIsClear1(final AABB aabb) {
-		final List entitiesWithinAABBExcludingEntity = this.getEntitiesWithinAABBExcludingEntity(null, aabb);
+		List<Entity> entitiesWithinAABBExcludingEntity = this.getEntitiesWithinAABBExcludingEntity(null, aabb);
 		for (int i = 0; i < entitiesWithinAABBExcludingEntity.size(); ++i) {
-			final Entity entity = (Entity) entitiesWithinAABBExcludingEntity.get(i);
+			var entity = entitiesWithinAABBExcludingEntity.get(i);
 			if (!entity.dead && entity.preventEntitySpawning) {
 				return false;
 			}

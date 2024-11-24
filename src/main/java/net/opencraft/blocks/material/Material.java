@@ -32,7 +32,7 @@ public enum Material {
 	}
 	
 	Material(byte type) {
-		this(((type >> 2) & 0xFF) == 1, ((type >> 2) & 0xFF) == 1, (type & 0xFF) == 1);
+		this((type & 0b100) != 0, (type & 0b010) != 0, (type & 0b001) != 0);
 	}
 	
 	Material() {
