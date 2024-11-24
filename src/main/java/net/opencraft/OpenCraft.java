@@ -318,16 +318,18 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 					stop();
 
 				if (isGamePaused) {
-					final float renderPartialTicks = timer.renderPartialTicks;
+					float renderPartialTicks = timer.renderPartialTicks;
 					timer.updateTimer();
 					timer.renderPartialTicks = renderPartialTicks;
 				} else
 					timer.updateTimer();
 
+				update();
 				for (int j = 0; j < Math.min(10, timer.elapsedTicks); ++j) {
 					++ticksRan;
 					this.tick();
 				}
+
 				checkGLError();
 				if (isGamePaused)
 					timer.renderPartialTicks = 1.0f;
@@ -335,8 +337,7 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 				sndManager.setListener(player, timer.renderPartialTicks);
 				glEnable(GL_TEXTURE_2D);
 				if (world != null)
-					while (world.updatingLighting())
-						;
+					while (world.updatingLighting());
 
 				if (!skipRenderWorld) {
 					playerController.setPartialTime(timer.renderPartialTicks);
@@ -351,6 +352,7 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 				Thread.yield();
 
 				mouse.poll();
+				keyboard.poll();
 
 				glfwSwapBuffers(window);
 				glfwPollEvents();
@@ -545,15 +547,52 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 		player.inventory.setCurrentItem(blockId);
 	}
 
-	public void tick() {
+	private void update() {
+		if (currentScreen == null && player != null && player.health <= 0)
+			displayGuiScreen(null);
+
+		boolean cancelInput = false;
+		if (currentScreen == null || currentScreen.allowUserInput) {
+			if (currentScreen == null) {
+				for (int key : keyboard.justPressedKeys) {
+					if (key == GLFW_KEY_ESCAPE) {
+						displayInGameMenu();
+					}
+
+					if (key == GLFW_KEY_F5) {
+						options.thirdPersonView = !options.thirdPersonView;
+						isRaining = !isRaining;
+					}
+
+					if (key == options.keyBindings.get(GameSettings.PlayerInput.INVENTORY)) {
+						displayGuiScreen(new GuiInventory(player.inventory));
+						cancelInput = true;
+					}
+
+					if (key == options.keyBindings.get(GameSettings.PlayerInput.DROP)) {
+						player.dropPlayerItemWithRandomChoice(
+								player.inventory.decrStackSize(player.inventory.currentItem, 1), false);
+					}
+
+					if (key >= GLFW_KEY_1 && key <= GLFW_KEY_9) {
+						player.inventory.currentItem = key - GLFW_KEY_1;
+					}
+				}
+			}
+		}
+
+		if (currentScreen != null && !cancelInput) {
+			currentScreen.handleInputEvents();
+		}
+	}
+
+	private void tick() {
 		ingameGUI.updateTick();
 		if (!isGamePaused && world != null)
 			playerController.updateController();
 		renderer.bindTexture("/assets/terrain.png");
 		if (!isGamePaused)
 			renderer.updateDynamicTextures();
-		if (currentScreen == null && player != null && player.health <= 0)
-			displayGuiScreen(null);
 
 		if (lmbCounter > 0)
 			--lmbCounter;
@@ -570,33 +609,8 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 						clickMouse(event.buttonNumber());
 						mouseTicksRan = ticksRan;
 					}
-				} else {
-					if (currentScreen == null)
-						continue;
-					currentScreen.handleMouseEvent(event);
 				}
 			}
-
-			if (currentScreen == null)
-				for (Integer key : keyboard.pressedKeys) {
-					if (key == GLFW_KEY_ESCAPE)
-						displayInGameMenu();
-
-					if (key == GLFW_KEY_F5) {
-						options.thirdPersonView = !options.thirdPersonView;
-						isRaining = !isRaining;
-					}
-
-					if (key == options.keyBindings.get(GameSettings.PlayerInput.INVENTORY))
-						displayGuiScreen(new GuiInventory(player.inventory));
-
-					if (key == options.keyBindings.get(GameSettings.PlayerInput.DROP))
-						player.dropPlayerItemWithRandomChoice(
-								player.inventory.decrStackSize(player.inventory.currentItem, 1), false);
-
-					if (key >= GLFW_KEY_1 && key <= GLFW_KEY_9)
-						player.inventory.currentItem = key - GLFW_KEY_1;
-				}
 
 			if (currentScreen == null) {
 				if (mouse.isButtonPressed(1) && ticksRan - mouseTicksRan >= timer.tps / 4.0f && inGameHasFocus) {
@@ -608,15 +622,16 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 					mouseTicksRan = ticksRan;
 				}
 			}
+
 			func_6254_a(0, currentScreen == null && mouse.isButtonPressed(1) && inGameHasFocus);
 		}
+
 		if (currentScreen != null)
 			mouseTicksRan = ticksRan + 10000;
 		if (currentScreen != null) {
-			currentScreen.handleInputEvents();
-			if (currentScreen != null)
-				currentScreen.updateScreen();
+			currentScreen.updateScreen();
 		}
+
 		if (world != null) {
 			world.difficultySetting = options.difficulty;
 			if (!isGamePaused) {
@@ -632,6 +647,7 @@ public class OpenCraft implements Runnable, GLFWFramebufferSizeCallbackI {
 				effectRenderer.updateEffects();
 			}
 		}
+
 		systemTime = System.currentTimeMillis();
 	}
 

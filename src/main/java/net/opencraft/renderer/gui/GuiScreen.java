@@ -78,7 +78,7 @@ public abstract class GuiScreen extends GuiElement {
 		for (MouseHandler.ButtonEvent event : oc.mouse.buttons.events)
 			this.handleMouseEvent(event);
 
-		for (int key : oc.keyboard.pressedKeys) {
+		for (int key : oc.keyboard.justPressedKeys) {
 			if (key == -1)
 				continue;
 
