@@ -3,6 +3,9 @@ message(STATUS "Building for Windows")
 # Define GLFW root directory first
 set(GLFW_DIR "${CMAKE_SOURCE_DIR}/glfw-unbounded")
 
+# Define GLFW include directory
+include_directories("${GLFW_DIR}/include")
+
 # Architecture options
 option(TARGET_WINDOWS_64 "Build for Windows 64-bit with MinGW" OFF)
 option(TARGET_WINDOWS_32 "Build for Windows 32-bit with MinGW" OFF)

@@ -1,5 +1,8 @@
 message(STATUS "Building for Linux")
 
+# Define GLFW include directory
+include_directories("${GLFW_DIR}/include")
+
 # Architecture options
 option(TARGET_LINUX_64 "Build for Linux 64-bit with GCC" OFF)
 option(TARGET_LINUX_32 "Build for Linux 32-bit with GCC" OFF)
