@@ -42,4 +42,8 @@ target_link_libraries(opencraft PRIVATE
         -static-libgcc
         -static-libstdc++
         -mwindows
+        -lopengl32
+        -lgdi32
+        -luser32
+        -lshell32
 )
