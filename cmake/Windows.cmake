@@ -51,7 +51,10 @@ add_executable(opencraft ${SRC_FILES})
 
 # Static linking
 ## user won't require additional dlls' ;)
-target_compile_options(opencraft PRIVATE -static)
+target_compile_options(opencraft PRIVATE -static -mwindows)
+
+# No window please
+target_link_options(opencraft PRIVATE -mwindows)
 
 # Link libraries
 link_libraries(${GLFW_STATIC_LIB} glfw3 opengl32 gdi32 winmm)
