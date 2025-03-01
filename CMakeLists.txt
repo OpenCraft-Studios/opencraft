@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(OpenCraft C)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 # Set C standard
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
