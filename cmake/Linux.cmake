@@ -21,3 +21,7 @@ endif()
 
 # Build executable
 add_executable(opencraft ${SRC_FILES})
+
+# Link libraries
+link_libraries(${GLFW_STATIC_LIB} glfw3)
+target_link_libraries(opencraft PRIVATE ${GLFW_STATIC_LIB} glfw3)

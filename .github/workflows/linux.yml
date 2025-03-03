@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get -y update
-          sudo apt-get -y install gcc-multilib cmake
+          sudo apt-get -y install gcc-multilib cmake libglfw3-dev
 
       - name: Compile
         shell: bash
