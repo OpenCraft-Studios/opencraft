@@ -27,9 +27,5 @@ link_directories(${GLFW_LIBRARY_DIRS})
 # Build executable
 add_executable(opencraft ${SRC_FILES})
 
-# Aplicar flags correctamente
-target_compile_options(opencraft PRIVATE ${GLFW_CFLAGS})
-target_link_options(opencraft PRIVATE ${GLFW_LDFLAGS})
-
-# Linkear todas las dependencias encontradas por pkg-config
-target_link_libraries(opencraft PRIVATE ${GLFW_LIBRARIES})
+target_compile_options(opencraft PRIVATE ${GLFW_CFLAGS_OTHER})
+target_link_libraries(opencraft PRIVATE ${GLFW_LDFLAGS} ${GLFW_LIBRARIES})
