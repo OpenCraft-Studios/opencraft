@@ -1,8 +1,5 @@
 message(STATUS "Building for Linux")
 
-# Define GLFW include directory
-include_directories("${GLFW_DIR}/include")
-
 # Architecture options
 option(TARGET_LINUX_64 "Build for Linux 64-bit with GCC" OFF)
 option(TARGET_LINUX_32 "Build for Linux 32-bit with GCC" OFF)
@@ -24,10 +21,15 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLFW REQUIRED glfw3)
 
 # Include directories and link libraries automatically
+include_directories(${GLFW_INCLUDE_DIRS})
 link_directories(${GLFW_LIBRARY_DIRS})
 
 # Build executable
 add_executable(opencraft ${SRC_FILES})
 
-# Link libraries automatically detected by pkg-config
+# Aplicar flags correctamente
+target_compile_options(opencraft PRIVATE ${GLFW_CFLAGS})
+target_link_options(opencraft PRIVATE ${GLFW_LDFLAGS})
+
+# Linkear todas las dependencias encontradas por pkg-config
 target_link_libraries(opencraft PRIVATE ${GLFW_LIBRARIES})
