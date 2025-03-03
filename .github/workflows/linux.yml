@@ -81,7 +81,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get -y update
-          sudo apt-get -y install cmake
+          sudo apt-get -y install cmake libglfw3-dev
 
       - name: Compile
         shell: bash

@@ -19,9 +19,12 @@ elseif(TARGET_LINUX_32)
     set(EXECUTABLE_NAME "oc_linux32")
 endif()
 
+# Include user libraries
+link_directories(/usr/local/lib/)
+
 # Build executable
 add_executable(opencraft ${SRC_FILES})
 
 # Link libraries
 link_libraries(${GLFW_STATIC_LIB} glfw3)
-target_link_libraries(opencraft PRIVATE ${GLFW_STATIC_LIB} glfw3)
+target_link_libraries(opencraft PRIVATE ${GLFW_STATIC_LIB} GL GLU glfw3 X11 Xxf86vm Xrandr pthread Xi)
