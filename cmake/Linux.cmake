@@ -19,12 +19,15 @@ elseif(TARGET_LINUX_32)
     set(EXECUTABLE_NAME "oc_linux32")
 endif()
 
-# Include user libraries
-link_directories(/usr/local/lib/)
+# Detect GLFW using pkg-config
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLFW REQUIRED glfw3)
+
+# Include directories and link libraries automatically
+link_directories(${GLFW_LIBRARY_DIRS})
 
 # Build executable
 add_executable(opencraft ${SRC_FILES})
 
-# Link libraries
-link_libraries(${GLFW_STATIC_LIB} glfw3)
-target_link_libraries(opencraft PRIVATE ${GLFW_STATIC_LIB} GL GLU glfw3 X11 Xxf86vm Xrandr pthread Xi)
+# Link libraries automatically detected by pkg-config
+target_link_libraries(opencraft PRIVATE ${GLFW_LIBRARIES})
