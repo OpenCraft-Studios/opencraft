@@ -28,6 +28,10 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo apt-get -y update
 
+          echo "deb http://archive.ubuntu.com/ubuntu/ focal universe" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://archive.ubuntu.com/ubuntu/ focal multiverse" | sudo tee -a /etc/apt/sources.list
+
+          sudo apt-get -y update
           sudo apt-get -y install gcc-multilib cmake libglfw3-dev:i386 libglu1-mesa:i386 libglfw3:i386
 
       - name: Compile
