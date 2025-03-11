@@ -16,6 +16,9 @@ elseif(TARGET_LINUX_32)
     set(EXECUTABLE_NAME "oc_linux32")
 endif()
 
+# Set policy to prefer GLVND for OpenGL
+cmake_policy(SET CMP0072 NEW)
+
 # Find GLFW & OpenGL
 find_package(OpenGL REQUIRED)
 find_package(PkgConfig REQUIRED)
