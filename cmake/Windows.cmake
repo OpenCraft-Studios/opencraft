@@ -55,7 +55,7 @@ endif()
 ## Static linking
   target_compile_options(${EXECUTABLE_NAME} PRIVATE -static -mwindows)
 
-## FIXME: No window please
+## No console please
   target_link_options(${EXECUTABLE_NAME} PRIVATE -mwindows)
 
 ## Link libraries

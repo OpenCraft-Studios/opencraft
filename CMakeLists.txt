@@ -18,7 +18,7 @@ project(OpenCraft C)
   option(TARGET_MSDOS "Build for MS-DOS with DJGPP" OFF)
 
 ## Executable settings
-  # Default executable name
+  # Default executable name (generic)
     set(EXECUTABLE_NAME "opencraft")
 
   # Set output directory and filename
