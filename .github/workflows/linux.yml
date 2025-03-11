@@ -27,13 +27,23 @@ jobs:
       - name: Compile GLFW (i386)
         shell: bash
         run: |
-          git clone https://github.com/glfw/glfw.git glfw_build
-          cd glfw_build
-          cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/i386-toolchain.cmake -DBUILD_SHARED_LIBS=ON .
-          make -j$(nproc)
-          sudo make install
-          cd ..
-          rm -rf glfw_build
+          git clone --branch 3.3 --single-branch https://github.com/glfw/glfw.git
+          cd glfw
+
+          mkdir -p build
+          cd build
+
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS="-m32" \
+            -DCMAKE_CXX_FLAGS="-m32" \
+            -DCMAKE_EXE_LINKER_FLAGS="-m32" \
+            -DGLFW_BUILD_EXAMPLES=OFF \
+            -DGLFW_BUILD_TESTS=OFF \
+            -DGLFW_BUILD_DOCS=OFF
+
+          cmake --build . --parallel
+
 
       - name: Compile
         shell: bash
