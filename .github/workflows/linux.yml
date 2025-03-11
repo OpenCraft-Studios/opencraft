@@ -27,8 +27,8 @@ jobs:
       - name: Compile GLFW (i386)
         shell: bash
         run: |
-          git clone --branch 3.3 --single-branch https://github.com/glfw/glfw.git
-          cd glfw
+          git clone --branch latest --single-branch https://github.com/glfw/glfw.git glfw_selfcompiled
+          cd glfw_selfcompiled
 
           mkdir -p build
           cd build
@@ -43,7 +43,6 @@ jobs:
             -DGLFW_BUILD_DOCS=OFF
 
           cmake --build . --parallel
-
 
       - name: Compile
         shell: bash
