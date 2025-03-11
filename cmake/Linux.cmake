@@ -16,17 +16,20 @@ elseif(TARGET_LINUX_32)
     set(EXECUTABLE_NAME "oc_linux32")
 endif()
 
-# Set policy to prefer GLVND for OpenGL
-cmake_policy(SET CMP0072 NEW)
+## Set policy to prefer GLVND for OpenGL
+  cmake_policy(SET CMP0072 NEW)
 
-# Find GLFW & OpenGL
-find_package(OpenGL REQUIRED)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLFW REQUIRED glfw3)
+## Find GLFW & OpenGL
+  find_package(OpenGL REQUIRED)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(GLFW REQUIRED glfw3)
 
-# Include directories
-include_directories(${OPENGL_INCLUDE_DIR} ${GLFW_INCLUDE_DIRS})
-link_directories(${GLFW_LIBRARY_DIRS})
+## Include directories
+  include_directories(${OPENGL_INCLUDE_DIR} ${GLFW_INCLUDE_DIRS})
+  link_directories(${GLFW_LIBRARY_DIRS})
 
-# Apply compilation flags
-target_link_libraries(${EXECUTABLE_NAME} PRIVATE OpenGL::GL ${GLFW_LIBRARIES} ${CMAKE_DL_LIBS} m)
+## Build executable
+  add_executable(${EXECUTABLE_NAME} ${SRC_FILES})
+
+## Link libraries
+  target_link_libraries(${EXECUTABLE_NAME} PRIVATE OpenGL::GL ${GLFW_LIBRARIES} ${CMAKE_DL_LIBS} m)
