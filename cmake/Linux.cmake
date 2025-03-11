@@ -16,16 +16,16 @@ elseif(TARGET_LINUX_32)
     set(EXECUTABLE_NAME "oc_linux32")
 endif()
 
-# Detect GLFW using pkg-config
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLFW REQUIRED glfw3)
+# Find GLFW & OpenGL
+find_package(OpenGL REQUIRED)
+find_package(glfw3 REQUIRED)
 
-# Include directories and link libraries automatically
-include_directories(${GLFW_INCLUDE_DIRS})
+# Include directories
+include_directories(${OPENGL_INCLUDE_DIR})
 link_directories(${GLFW_LIBRARY_DIRS})
 
-# Build executable
+# Create the executable
 add_executable(opencraft ${SRC_FILES})
 
-target_compile_options(opencraft PRIVATE ${GLFW_CFLAGS_OTHER})
-target_link_libraries(opencraft PRIVATE ${GLFW_LDFLAGS} ${GLFW_LIBRARIES})
+# Apply compilation flags
+target_link_libraries(opencraft PRIVATE ${OPENGL_gl_LIBRARY} glfw)
