@@ -18,14 +18,15 @@ endif()
 
 # Find GLFW & OpenGL
 find_package(OpenGL REQUIRED)
-find_package(glfw3 REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLFW REQUIRED glfw3)
 
 # Include directories
-include_directories(${OPENGL_INCLUDE_DIR})
+include_directories(${OPENGL_INCLUDE_DIR} ${GLFW_INCLUDE_DIRS})
 link_directories(${GLFW_LIBRARY_DIRS})
 
-# Create the executable
-add_executable(opencraft ${SRC_FILES})
+# Build executable
+add_executable(${EXECUTABLE_NAME} ${SRC_FILES})
 
 # Apply compilation flags
-target_link_libraries(opencraft PRIVATE ${OPENGL_gl_LIBRARY} glfw)
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE OpenGL::GL ${GLFW_LIBRARIES} ${CMAKE_DL_LIBS} m)
