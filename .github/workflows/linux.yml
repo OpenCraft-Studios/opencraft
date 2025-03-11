@@ -17,17 +17,23 @@ jobs:
         with:
           submodules: true
 
-      - name: Install packages
+      - name: Install dependencies
         shell: bash
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get -y update
+          sudo apt-get -y install gcc-multilib cmake xorg-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 
-          echo "deb http://archive.ubuntu.com/ubuntu/ focal universe" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://archive.ubuntu.com/ubuntu/ focal multiverse" | sudo tee -a /etc/apt/sources.list
-
-          sudo apt-get -y update
-          sudo apt-get -y install gcc-multilib cmake libglfw3-dev:i386 libglu1-mesa:i386 libglfw3:i386
+      - name: Compile GLFW (i386)
+        shell: bash
+        run: |
+          git clone https://github.com/glfw/glfw.git glfw_build
+          cd glfw_build
+          cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/i386-toolchain.cmake -DBUILD_SHARED_LIBS=ON .
+          make -j$(nproc)
+          sudo make install
+          cd ..
+          rm -rf glfw_build
 
       - name: Compile
         shell: bash
