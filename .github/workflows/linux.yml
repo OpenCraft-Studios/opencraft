@@ -22,7 +22,20 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get -y update
-          sudo apt-get -y install gcc-multilib build-dep cmake xorg-dev libglu1-mesa-dev
+          sudo apt-get -y install gcc-multilib cmake \
+                                xorg-dev \
+                                libxrandr-dev \
+                                libxinerama-dev \
+                                libxcursor-dev \
+                                libxi-dev \
+                                wayland-protocols \
+                                libwayland-dev \
+                                libxkbcommon-dev \
+                                libx11-dev \
+                                libx11-xcb-dev \
+                                libxcb1-dev \
+                                libxau-dev \
+                                libglu1-mesa-dev
 
       - name: Compile GLFW (i386)
         shell: bash
