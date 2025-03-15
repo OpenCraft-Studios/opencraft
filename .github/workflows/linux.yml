@@ -22,19 +22,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get -y update
-          sudo apt-get -y install gcc-multilib cmake \
-                                xorg-dev \
-                                libxrandr-dev \
-                                libxinerama-dev \
-                                libxcursor-dev \
-                                libxi-dev \
-                                wayland-protocols \
-                                libwayland-dev \
-                                libxkbcommon-dev \
-                                libx11-dev \
-                                libx11-xcb-dev \
-                                libxcb1-dev \
-                                libxau-dev
+          sudo apt-get -y install gcc-multilib build-dep cmake xorg-dev libglu1-mesa-dev
 
       - name: Compile GLFW (i386)
         shell: bash
@@ -42,19 +30,9 @@ jobs:
           git clone --branch latest --single-branch https://github.com/glfw/glfw.git glfw_selfcompiled
           cd glfw_selfcompiled
 
-          mkdir -p build
-          cd build
-
-          cmake .. \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_C_FLAGS="-m32" \
-            -DCMAKE_CXX_FLAGS="-m32" \
-            -DCMAKE_EXE_LINKER_FLAGS="-m32" \
-            -DGLFW_BUILD_EXAMPLES=OFF \
-            -DGLFW_BUILD_TESTS=OFF \
-            -DGLFW_BUILD_DOCS=OFF
-
-          cmake --build . --parallel
+          sudo cmake -G "Unix Makefiles"
+          sudo make
+          sudo make install
 
       - name: Compile
         shell: bash
