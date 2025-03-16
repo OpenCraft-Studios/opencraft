@@ -34,7 +34,7 @@ jobs:
           mkdir build
           cd build
 
-          cmake .. -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_INSTALL_PREFIX=/usr/local
+          cmake .. -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_INSTALL_PREFIX=/usr/local -DGLFW_BUILD_WAYLAND=OFF
           make -j$(nproc)
           sudo make install
 
