@@ -23,7 +23,7 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo apt-get -y update
           sudo apt-get -y install gcc-multilib cmake
-          sudo apt-get -y install libx11-dev:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxcursor-dev:i386 libxi-dev:i386
+          sudo apt-get -y install lib32gcc-12-dev libx11-dev:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxcursor-dev:i386 libxi-dev:i386
 
       - name: Compile GLFW (i386)
         shell: bash
