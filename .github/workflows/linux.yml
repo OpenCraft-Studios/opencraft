@@ -39,12 +39,8 @@ jobs:
           cmake -B build-x11-static -S . -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32"
           cmake --build build-x11-static --parallel
 
-          # Configure & build the shared version (X11 @ 32 bits)
-          cmake -B build-x11-shared -S . -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON -D BUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32"
-          cmake --build build-x11-shared --parallel
-
           # Install the shared version
-          sudo cmake --install build-x11-shared
+          sudo cmake --install build-x11-static
 
       - name: Compile
         shell: bash
