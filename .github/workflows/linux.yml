@@ -36,7 +36,7 @@ jobs:
           cd glfw-v3.4
 
           # Configure & build the static version (X11 @ 32 bits)
-          cmake -B build-x11-static -S . -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32"
+          cmake -B build-x11-static -S . -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32"
           cmake --build build-x11-static --parallel
 
           # Install the shared version
