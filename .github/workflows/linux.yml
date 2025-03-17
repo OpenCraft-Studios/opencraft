@@ -27,20 +27,24 @@ jobs:
 
       - name: Compile GLFW (i386)
         shell: bash
+        env:
+          CFLAGS: -Werror -lm
+          CXXFLAGS: -lm
+          LDFLAGS: -lm
         run: |
-          git clone --branch latest --single-branch https://github.com/glfw/glfw.git glfw_selfcompiled
-          cd glfw_selfcompiled
+          git clone --branch latest --single-branch https://github.com/glfw/glfw.git glfw-v3.4
+          cd glfw-v3.4
 
-          mkdir build
-          cd build
+          # Configure & build the static version (X11 @ 32 bits)
+          cmake -B build-x11-static -S . -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32"
+          cmake --build build-x11-static --parallel
 
-          export CFLAGS="-m32 -lm"
-          export CXXFLAGS="-m32 -lm"
-          export LDFLAGS="-lm"
+          # Configure & build the shared version (X11 @ 32 bits)
+          cmake -B build-x11-shared -S . -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON -D BUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32"
+          cmake --build build-x11-shared --parallel
 
-          cmake .. -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_INSTALL_PREFIX=/usr/local -DGLFW_BUILD_WAYLAND=OFF
-          make -j$(nproc)
-          sudo make install
+          # Install the shared version
+          sudo cmake --install build-x11-shared
 
       - name: Compile
         shell: bash
