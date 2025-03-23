@@ -25,15 +25,6 @@ jobs:
           sudo apt-get -y install gcc-multilib cmake
           sudo apt-get -y install lib32gcc-12-dev libx11-dev:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxcursor-dev:i386 libxi-dev:i386
 
-      - name: Check for libm
-        run: |
-          if ldconfig -p | grep -q "libm.so"; then
-            echo "LIBM is installed!"
-          else
-            echo "LIBM is NOT installed."
-            exit 1
-          fi
-
       - name: Compile GLFW (i386)
         shell: bash
         env:
@@ -43,6 +34,9 @@ jobs:
         run: |
           git clone --branch latest --single-branch https://github.com/glfw/glfw.git glfw-v3.4
           cd glfw-v3.4
+
+          # Inject super hyper mega secret script
+          sed -i '98i if (TARGET glfw)\n    target_link_libraries(glfw PRIVATE m)\nendif()' glfw-v3.4/CMakeLists.txt
 
           # Configure & build the static version (X11 @ 32 bits)
           cmake -B build-x11-static -S . -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON -DCMAKE_C_FLAGS="-m32" -DCMAKE_CXX_FLAGS="-m32"
