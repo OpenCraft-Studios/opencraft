@@ -14,6 +14,10 @@ elseif(TARGET_LINUX_32)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")  # Enable 32-bit mode
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")  # Enable 32-bit mode in C++
     set(EXECUTABLE_NAME "oc_linux32")
+
+    set(OPENGL_INCLUDE_DIR "/usr/include")
+    set(OPENGL_glx_LIBRARY "/usr/lib/i386-linux-gnu/libGL.so")
+    set(OPENGL_opengl_LIBRARY "/usr/lib/i386-linux-gnu/libGL.so")
 endif()
 
 ## Set policy to prefer GLVND for OpenGL
