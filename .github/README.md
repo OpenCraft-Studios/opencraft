@@ -21,7 +21,7 @@
   <h3>OpenCraft</h3>
 
   <p>
-    An open-source, cool and universal sandbox game.
+    An universal Minecraft clone.
     <br /><br />
     <a href="https://github.com/OpenCraft-Studios/opencraft/wiki">
       <b>Explore the docs »</b>
@@ -36,14 +36,18 @@
 
 <br />
 
+> [!WARNING]
+> **OpenCraft is not affiliated with (or supported by) Mojang AB, Minecraft, or Microsoft in any way.** <br />
+> **It will never support Minecraft accounts or modern Minecraft servers.**
+
 ## 🚀 Getting started
 **OpenCraft** is a game made with voxels that have that classical blocky look.
 It is coded in the C language. Uses **GLFW** and a custom graphical library.
 
-🔹 **Completely free** and open-source.<br />
-🔹 **Fully customizable and moddable** without restrictions.<br />
-🔹 **Optimized for performance**, no unnecessary bloat.<br />
-🔹 **Community-driven**, where anyone can contribute ideas and improvements.<br />
+🔹 **Completely free** and open-source. <br />
+🔹 **Fully customizable and moddable** without restrictions. <br />
+🔹 **Optimized for performance**, no unnecessary bloat. <br />
+🔹 **Community-driven**, where anyone can contribute ideas and improvements. <br />
 
 ### 🎯 Why was this project created?
 Other similar games have a closed-source project with strict licenses. While they can be decompiled, modifying and redistributing a modified version is **illegal**.
@@ -52,17 +56,17 @@ OpenCraft aims to be a **free and open alternative** where anyone can modify and
 
 💙 **Like the idea? Support us with a ⭐ on GitHub!**
 
----
+<br />
 
-## 📥 Download
+## ⬇️ Download
 > **Coming soon...**
 
-🔧 **We want OpenCraft to be as polished as possible before releasing a playable version!**
+🔧 **We want OpenCraft to be as polished as possible before releasing a playable version!** <br />
 If you want to help, check out our code or join the community.
 
 <div align="right">[ <a href="#-getting-started">↑ Back to top ↑</a> ]</div>
 
----
+<br />
 
 ## ⚖️ License
 #### **You CAN:**
@@ -76,7 +80,7 @@ If you want to help, check out our code or join the community.
 ❌ Add malware or malicious code to forks or derivative versions.<br />
 ❌ Impersonate the original creators.<br />
 
-🔹 **You must always give credit to the original authors.**
+🔹 **You must always give credit to the original authors.** <br />
 🔹 The full license can be found at [BSL 1.0][license-url].
 
 <div align="right">[ <a href="#-getting-started">↑ Back to top ↑</a> ]</div>
@@ -87,6 +91,8 @@ If you want to help, check out our code or join the community.
 | [![CiroZDP](https://avatars.githubusercontent.com/u/161502824?v=4)](https://github.com/CiroZDP) | ![Community](https://cdni.iconscout.com/illustration/free/thumb/free-community-2103591-1768087.png) |
 |:-----------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------:|
 | **CiroZDP** *(Founder & Developer)* | **The Community** *(Contributors & Testers)* |
+
+<br />
 
 💡 **Want to help?** You can contribute with code, ideas, or simply by leaving a ⭐ on GitHub.
 
