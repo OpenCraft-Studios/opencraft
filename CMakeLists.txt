@@ -4,7 +4,7 @@ project(OpenCraft C)
 ## Debug helper
   set(CMAKE_VERBOSE_MAKEFILE ON)
 
-## C/C++ standars
+## C/C++ standards
   set(CMAKE_C_STANDARD 99)
   set(CMAKE_C_STANDARD_REQUIRED True)
 
