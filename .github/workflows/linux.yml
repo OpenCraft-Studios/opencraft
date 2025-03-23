@@ -51,7 +51,7 @@ jobs:
         with:
           icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/640px-Tux.svg.png'
           title: 'Linux x32 Build'
-          content: 'This workflow has **succeeded**.\\nClick [here](https://github.com/CiroZDP/opencraft/actions/workflows/linux.yml) to see the latest version.'
+          content: 'This workflow has **succeeded**.\\nClick [here](https://github.com/OpenCraft-Studios/opencraft/actions/workflows/linux.yml) to see the latest version.'
           color: 511007
           url: '${{ secrets.WEBHOOK_BUILD_SUCCESS_URL }}'
 
@@ -61,7 +61,7 @@ jobs:
         with:
           icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/640px-Tux.svg.png'
           title: 'Linux x32 Build'
-          content: 'This workflow has **failed**!\\nClick [here](https://github.com/CiroZDP/opencraft/actions/workflows/linux.yml) to see the latest version.'
+          content: 'This workflow has **failed**!\\nClick [here](https://github.com/OpenCraft-Studios/opencraft/actions/workflows/linux.yml) to see the latest version.'
           color: 16724016
           url: '${{ secrets.WEBHOOK_BUILD_FAILED_URL }}'
 
@@ -105,7 +105,7 @@ jobs:
         with:
           icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/640px-Tux.svg.png'
           title: 'Linux x64 Build'
-          content: 'This workflow has **succeeded**.\\nClick [here](https://github.com/CiroZDP/opencraft/actions/workflows/linux.yml) to see the latest version.'
+          content: 'This workflow has **succeeded**.\\nClick [here](https://github.com/OpenCraft-Studios/opencraft/actions/workflows/linux.yml) to see the latest version.'
           color: 511007
           url: '${{ secrets.WEBHOOK_BUILD_SUCCESS_URL }}'
 
@@ -115,6 +115,6 @@ jobs:
         with:
           icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/640px-Tux.svg.png'
           title: 'Linux x64 Build'
-          content: 'This workflow has **failed**!\\nClick [here](https://github.com/CiroZDP/opencraft/actions/workflows/linux.yml) to see the latest version.'
+          content: 'This workflow has **failed**!\\nClick [here](https://github.com/OpenCraft-Studios/opencraft/actions/workflows/linux.yml) to see the latest version.'
           color: 16724016
           url: '${{ secrets.WEBHOOK_BUILD_FAILED_URL }}'

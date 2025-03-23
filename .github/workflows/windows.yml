@@ -49,7 +49,7 @@ jobs:
         with:
           icon: 'https://img.icons8.com/color/512/windows-11.png'
           title: 'Windows x32 Build'
-          content: 'This workflow has **succeeded**.\\nClick [here](https://github.com/CiroZDP/opencraft/actions/workflows/windows.yml) to see the latest version!'
+          content: 'This workflow has **succeeded**.\\nClick [here](https://github.com/OpenCraft-Studios/opencraft/actions/workflows/windows.yml) to see the latest version!'
           color: 511007
           url: '${{ secrets.WEBHOOK_BUILD_SUCCESS_URL }}'
 
@@ -59,7 +59,7 @@ jobs:
         with:
           icon: 'https://img.icons8.com/color/512/windows-11.png'
           title: 'Windows x32 Build'
-          content: 'This workflow has **failed**!\\nClick [here](https://github.com/CiroZDP/opencraft/actions/workflows/windows.yml) to see the latest version.'
+          content: 'This workflow has **failed**!\\nClick [here](https://github.com/OpenCraft-Studios/opencraft/actions/workflows/windows.yml) to see the latest version.'
           color: 16724016
           url: '${{ secrets.WEBHOOK_BUILD_FAILED_URL }}'
 
@@ -102,7 +102,7 @@ jobs:
         with:
           icon: 'https://img.icons8.com/color/512/windows-11.png'
           title: 'Windows x64 Build'
-          content: 'This workflow has **succeeded**.\\nClick [here](https://github.com/CiroZDP/opencraft/actions/workflows/windows.yml) to see the latest version!'
+          content: 'This workflow has **succeeded**.\\nClick [here](https://github.com/OpenCraft-Studios/opencraft/actions/workflows/windows.yml) to see the latest version!'
           color: 511007
           url: '${{ secrets.WEBHOOK_BUILD_SUCCESS_URL }}'
 
@@ -112,6 +112,6 @@ jobs:
         with:
           icon: 'https://img.icons8.com/color/512/windows-11.png'
           title: 'Windows x64 Build'
-          content: 'This workflow has **failed**!\\nClick [here](https://github.com/CiroZDP/opencraft/actions/workflows/windows.yml) to see the latest version.'
+          content: 'This workflow has **failed**!\\nClick [here](https://github.com/OpenCraft-Studios/opencraft/actions/workflows/windows.yml) to see the latest version.'
           color: 16724016
           url: '${{ secrets.WEBHOOK_BUILD_FAILED_URL }}'

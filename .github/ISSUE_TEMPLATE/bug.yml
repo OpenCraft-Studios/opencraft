@@ -9,7 +9,7 @@ body:
       label: Checks
       description: Please verify that you've followed these steps.
       options:
-        - label: I understand project setup issues should be asked on [StackOverflow](https://stackoverflow.com/) or in [GitHub Discussions](https://github.com/CiroZDP/opencraft/discussions).
+        - label: I understand project setup issues should be asked on [StackOverflow](https://stackoverflow.com/) or in [GitHub Discussions](https://github.com/OpenCraft-Studios/opencraft/discussions).
           required: true
         - label: I updated to the latest OpenCraft version.
           required: true
