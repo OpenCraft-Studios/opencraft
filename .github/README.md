@@ -21,7 +21,7 @@
   <h3>OpenCraft</h3>
 
   <p>
-    An universal Minecraft clone.
+    A universal Minecraft clone.
     <br /><br />
     <a href="https://github.com/OpenCraft-Studios/opencraft/wiki">
       <b>Explore the docs »</b>
