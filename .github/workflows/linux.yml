@@ -25,6 +25,10 @@ jobs:
           sudo apt-get -y install gcc-multilib cmake pkg-config
           sudo apt-get -y install lib32gcc-12-dev libx11-dev:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxcursor-dev:i386 libxi-dev:i386
 
+      - name: Find LibGL so
+        shell: bash
+        run: find / -name libGL.so 2>/dev/null
+
       - name: Compile GLFW (i386)
         shell: bash
         env:
