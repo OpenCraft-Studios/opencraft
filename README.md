@@ -14,7 +14,6 @@
 
 <br /><br />
 <div align="center">
-https://gitlab.com/opencraft-studios/opencraft.git
   <a href="https://gitlab.com/opencraft-studios/opencraft">
     <img src=".gitlab/assets/images/icon.png" alt="" height="128" width="128" />
   </a>
