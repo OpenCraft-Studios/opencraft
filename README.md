@@ -14,22 +14,22 @@
 
 <br /><br />
 <div align="center">
-  <a href="https://github.com/OpenCraft-Studios/opencraft">
-    <img src="assets/images/icon.png" alt="" height="128" width="128" />
+  <a href="https://gitlab.com/opencraft-studios/opencraft">
+    <img src=".gitlab/assets/images/icon.png" alt="" height="128" width="128" />
   </a>
 
   <h3>OpenCraft</h3>
 
   <p>
-    A universal Minecraft clone.
+    A cool sandbox game.
     <br /><br />
-    <a href="https://github.com/OpenCraft-Studios/opencraft/wiki">
+    <a href="https://gitlab.com/opencraft-studios/opencraft/-/wikis/home">
       <b>Explore the docs »</b>
     </a>
     <br />
-    <a href="https://github.com/OpenCraft-Studios/opencraft/issues/new?template=bug.yml">🐛 Report Bugs</a> ·
+    <a href="https://gitlab.com/opencraft-studios/opencraft/-/issues/new">🐛 Report Bugs</a> ·
     <a href="#-download">📥 Download</a> ·
-    <a href="https://github.com/OpenCraft-Studios/opencraft/issues/new?template=feature.yml">💡 Suggest Features</a>
+    <a href="https://gitlab.com/opencraft-studios/opencraft/-/issues/new">💡 Suggest Features</a>
   </p>
 
 </div>
@@ -41,8 +41,8 @@
 > **It will never support Minecraft accounts or modern Minecraft servers.**
 
 ## 🚀 Getting started
-**OpenCraft** is a game made with voxels that have that classical blocky look.
-It is coded in the C language. Uses **GLFW** and a custom graphical library.
+**OpenCraft** is a Minecraft clone made with voxels that have that classical blocky look.
+It is coded in the C language. Uses **GLFW** and a custom graphical library (WIP).
 
 🔹 **Completely free** and open-source. <br />
 🔹 **Fully customizable and moddable** without restrictions. <br />
@@ -54,7 +54,7 @@ Other similar games have a closed-source project with strict licenses. While the
 
 OpenCraft aims to be a **free and open alternative** where anyone can modify and distribute their own version without legal issues.
 
-💙 **Like the idea? Support us with a ⭐ on GitHub!**
+💙 **Like the idea? Support us with a ⭐ on GitLab!**
 
 <br />
 
@@ -81,20 +81,20 @@ If you want to help, check out our code or join the community.
 ❌ Impersonate the original creators.<br />
 
 🔹 **You must always give credit to the original authors.** <br />
-🔹 The full license can be found at [BSL 1.0][license-url].
+🔹 The full license can be found at [BSD 3.0][license-url].
 
 <div align="right">[ <a href="#-getting-started">↑ Back to top ↑</a> ]</div>
 
 ---
 
 ## 👷‍♂️ Contributors
-| [![CiroZDP](https://avatars.githubusercontent.com/u/161502824?v=4)](https://github.com/CiroZDP) | ![Community](https://cdni.iconscout.com/illustration/free/thumb/free-community-2103591-1768087.png) |
+| [![CiroDOS](https://gitlab.com/uploads/-/system/user/avatar/19526631/avatar.png)](https://gitlab.com/CiroDOS) | ![Community](https://cdni.iconscout.com/illustration/free/thumb/free-community-2103591-1768087.png) |
 |:-----------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------:|
-| **CiroZDP** *(Founder & Developer)* | **The Community** *(Contributors & Testers)* |
+| **CiroDOS** *(Founder & Developer)* | **The Community** *(Contributors & Testers)* |
 
 <br />
 
-💡 **Want to help?** You can contribute with code, ideas, or simply by leaving a ⭐ on GitHub.
+💡 **Want to help?** You can contribute with code, ideas, or simply by leaving a ⭐ on GitLab.
 
 <div align="right">[ <a href="#-getting-started">↑ Back to top ↑</a> ]</div>
 
@@ -104,13 +104,13 @@ If you want to help, check out our code or join the community.
 [reddit-url]: https://www.reddit.com/r/OpenCraftMC/
 [discord-shield]: https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white
 [discord-url]: https://discord.gg/bSMtp3DZz8
-[contributors-shield]: https://img.shields.io/github/contributors/OpenCraft-Studios/opencraft.svg?style=for-the-badge
-[contributors-url]: https://github.com/OpenCraft-Studios/opencraft/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/OpenCraft-Studios/opencraft.svg?style=for-the-badge
-[forks-url]: https://github.com/OpenCraft-Studios/opencraft/network/members
-[stars-shield]: https://img.shields.io/github/stars/OpenCraft-Studios/opencraft.svg?style=for-the-badge
-[stars-url]: https://github.com/OpenCraft-Studios/opencraft/stargazers
-[issues-shield]: https://img.shields.io/github/issues/OpenCraft-Studios/opencraft.svg?style=for-the-badge
-[issues-url]: https://github.com/OpenCraft-Studios/opencraft/issues
-[license-shield]: https://img.shields.io/github/license/OpenCraft-Studios/opencraft.svg?style=for-the-badge
-[license-url]: https://github.com/OpenCraft-Studios/opencraft/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/gitlab/contributors/opencraft-studios%2Fopencraft?style=for-the-badge
+[contributors-url]: https://gitlab.com/opencraft-studios/opencraft/-/project_members
+[forks-shield]: https://img.shields.io/gitlab/forks/opencraft-studios%2Fopencraft.svg?style=for-the-badge
+[forks-url]: https://gitlab.com/opencraft-studios/opencraft/-/forks/new
+[stars-shield]: https://img.shields.io/gitlab/stars/opencraft-studios%2Fopencraft.svg?style=for-the-badge
+[stars-url]: https://gitlab.com/opencraft-studios/opencraft/-/starrers
+[issues-shield]: https://img.shields.io/gitlab/issues/open-raw/opencraft-studios%2Fopencraft?style=for-the-badge
+[issues-url]: https://gitlab.com/opencraft-studios/opencraft/-/issues
+[license-shield]: https://img.shields.io/gitlab/license/opencraft-studios/opencraft.svg?style=for-the-badge
+[license-url]: https://gitlab.com/opencraft-studios/opencraft/-/blob/master/LICENSE.txt?ref_type=heads
