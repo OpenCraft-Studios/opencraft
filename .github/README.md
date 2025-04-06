@@ -14,91 +14,83 @@
 
 <br /><br />
 <div align="center">
-  <a href="https://github.com/OpenCraft-Studios/opencraft">
-    <img src="assets/images/icon.png" alt="" height="128" width="128" />
-  </a>
 
-  <h3>OpenCraft</h3>
-
+  ![OpenCraft Logo](assets/images/logoFullLight3.png)
+  
   <p>
-    A universal Minecraft clone.
+    A cool sandbox game.
     <br /><br />
     <a href="https://github.com/OpenCraft-Studios/opencraft/wiki">
       <b>Explore the docs »</b>
     </a>
     <br />
     <a href="https://github.com/OpenCraft-Studios/opencraft/issues/new?template=bug.yml">🐛 Report Bugs</a> ·
-    <a href="#-download">📥 Download</a> ·
+    <a href="#-building">🛠️ Building</a> ·
     <a href="https://github.com/OpenCraft-Studios/opencraft/issues/new?template=feature.yml">💡 Suggest Features</a>
+	<br /><br />
+	<sup>⭐ Star us on GitHub — it motivates us a lot!</sup>
   </p>
 
 </div>
 
-<br />
-
-> [!WARNING]
-> **OpenCraft is not affiliated with (or supported by) Mojang AB, Minecraft, or Microsoft in any way.** <br />
-> **It will never support Minecraft accounts or modern Minecraft servers.**
-
-## 🚀 Getting started
-**OpenCraft** is a game made with voxels that have that classical blocky look.
-It is coded in the C language. Uses **GLFW** and a custom graphical library.
-
-🔹 **Completely free** and open-source. <br />
-🔹 **Fully customizable and moddable** without restrictions. <br />
-🔹 **Optimized for performance**, no unnecessary bloat. <br />
-🔹 **Community-driven**, where anyone can contribute ideas and improvements. <br />
-
-### 🎯 Why was this project created?
-Other similar games have a closed-source project with strict licenses. While they can be decompiled, modifying and redistributing a modified version is **illegal**.
-
-OpenCraft aims to be a **free and open alternative** where anyone can modify and distribute their own version without legal issues.
-
-💙 **Like the idea? Support us with a ⭐ on GitHub!**
+> [!CAUTION]
+> OpenCraft is not affiliated with (or supported by) Mojang AB, Minecraft, or Microsoft in any way. <br />
+> It will never support Minecraft accounts or modern Minecraft servers.
 
 <br />
 
-## ⬇️ Download
-> **Coming soon...**
+## ☁️ Overview
+**OpenCraft** is a **Minecraft clone** made with voxels that have that classical blocky look.
+It is coded in the C language. Uses GLFW and a custom graphical library (WIP).
 
-🔧 **We want OpenCraft to be as polished as possible before releasing a playable version!** <br />
-If you want to help, check out our code or join the community.
+- 💸 **Completely free**                 — and open-source for everyone to mess with it! <br />
+- 🎨 **Fully customizable and moddable** — no restrictions. <br />
+- ⚡ **Optimized for performance**       — no unnecessary bloat. <br />
+- 👪 **Community-driven**                — where anyone can contribute ideas and improvements. <br />
 
-<div align="right">[ <a href="#-getting-started">↑ Back to top ↑</a> ]</div>
+### Why even bother?
+Other similar games have a closed-source project with strict licenses. While they can be decompiled, modifying and redistributing a modified version is illegal. OpenCraft aims to be a alternative where anyone can modify and distribute their own version without legal issues.
+
+### 🤝 Contact us
+[![Discord](https://amplication.com/images/discord_banner_purple.svg)][discord-url]
+
+<br />
+
+## 🛠️ Building
+Everything about building is in the wiki to make this README shorter.
 
 <br />
 
 ## ⚖️ License
-#### **You CAN:**
-✔️ Modify OpenCraft (textures, code, mechanics, etc.).<br />
-✔️ Distribute your modifications (without impersonating the original authors).<br />
-✔️ Credit yourself for your version (while giving credit to the original authors).<br />
+Some basic advices to prevent impersonation, promote safety and always encourage the downloading from official mirrors:
 
-#### **You MUST NOT:**
-❌ Sell the game or its modifications.<br />
-❌ Alter the license document.<br />
-❌ Add malware or malicious code to forks or derivative versions.<br />
-❌ Impersonate the original creators.<br />
+##### **You CAN:**
+- ✔️ **Modify** — OpenCraft *(textures, code, mechanics, etc.)*.<br />
+- ✔️ **Distribute** — your modifications.<br />
 
-🔹 **You must always give credit to the original authors.** <br />
-🔹 The full license can be found at [BSL 1.0][license-url].
-
-<div align="right">[ <a href="#-getting-started">↑ Back to top ↑</a> ]</div>
-
----
-
-## 👷‍♂️ Contributors
-| [![CiroZDP](https://avatars.githubusercontent.com/u/161502824?v=4)](https://github.com/CiroZDP) | ![Community](https://cdni.iconscout.com/illustration/free/thumb/free-community-2103591-1768087.png) |
-|:-----------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------:|
-| **CiroZDP** *(Founder & Developer)* | **The Community** *(Contributors & Testers)* |
+##### **You MUST NOT:**
+- ❌ **Sell** — the game or its modifications.<br />
+- ❌ **Impersonate** — the original creators.<br />
+- ❌ **Malware** — Add malware or malicious code to forks or derivative versions.<br />
+- ❌ **License** — Change the license document.<br />
 
 <br />
 
-💡 **Want to help?** You can contribute with code, ideas, or simply by leaving a ⭐ on GitHub.
+🔹 **You must always give credit to the original authors.** <br />
+🔹 The full license can be found at [BSD 3.0][license-url].
 
-<div align="right">[ <a href="#-getting-started">↑ Back to top ↑</a> ]</div>
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
----
+## 👷‍♂️ Contributors
+| [![CiroZDP](https://avatars.githubusercontent.com/u/161502824?v=4)](https://github.com/CiroZDP) | ![Community](https://cdni.iconscout.com/illustration/free/thumb/free-community-2103591-1768087.png) |
+|:-----------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|
+|                       **CiroZDP** <br /> *(Founder & Developer)*                                |                     **The Community** <br /> *(Contributors & Testers)*                             |
+
+<br />
+
+💡 **Want to help?** You can contribute with code or ideas.
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 [reddit-shield]: https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white
 [reddit-url]: https://www.reddit.com/r/OpenCraftMC/
