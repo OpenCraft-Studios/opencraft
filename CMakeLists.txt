@@ -11,7 +11,6 @@ file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
 # Compilation target options
 option(TARGET_WINDOWS "Build for Windows (32/64-bit)" OFF)
 option(TARGET_LINUX "Build for Linux (32/64-bit)" OFF)
-option(TARGET_MSDOS "Build for MS-DOS with DJGPP" OFF)
 
 # Default executable name
 set(EXECUTABLE_NAME "opencraft")
@@ -21,8 +20,6 @@ if(TARGET_WINDOWS)
     include(cmake/Windows.cmake)
 elseif(TARGET_LINUX)
     include(cmake/Linux.cmake)
-elseif(TARGET_MSDOS)
-    include(cmake/MSDOS.cmake)
 else()
     message(STATUS "Building in standard mode (compatible with the current system)")
 endif()
