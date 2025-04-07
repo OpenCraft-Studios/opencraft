@@ -15,7 +15,6 @@ project(OpenCraft C)
 ## Compilation target options
   option(TARGET_WINDOWS "Build for Windows (32/64-bit)" OFF)
   option(TARGET_LINUX "Build for Linux (32/64-bit)" OFF)
-  option(TARGET_MSDOS "Build for MS-DOS with DJGPP" OFF)
 
 ## Executable settings
   # Default executable name (generic)
@@ -32,5 +31,5 @@ if(TARGET_WINDOWS)
 elseif(TARGET_LINUX)
     include(cmake/Linux.cmake)
 else()
-    message(STATUS "Building in standard mode (compatible with the current system)")
+    message(STATUS "Building in standard mode")
 endif()

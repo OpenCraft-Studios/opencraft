@@ -28,6 +28,19 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo apt-get -y update
           sudo apt-get -y install gcc-multilib cmake
+          sudo apt-get -y install xorg-dev libgl1-mesa-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+
+      - name: Install GLFW
+        shell: bash
+        run: |
+          git clone --branch latest --single-branch https://github.com/glfw/glfw.git glfw-v3.4
+          cd glfw-v3.4
+
+          cmake -B build-x11-static -S . -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON
+          cmake --build build-x11-static --parallel
+
+          cd build-x11-static
+          sudo make install
 
       - name: Compile
         shell: bash
@@ -81,7 +94,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get -y update
-          sudo apt-get -y install cmake
+          sudo apt-get -y install cmake libglfw3-dev
 
       - name: Compile
         shell: bash
