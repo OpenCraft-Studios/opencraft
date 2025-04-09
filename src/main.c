@@ -6,7 +6,7 @@ static GLFWwindow* window;
 int main( void )
 {
     if (!glfwInit()) {
-        printf("[ main/INFO ]: Unable to start GLFW!\n");
+        fprintf(stderr, "[ main/ERROR ]: Unable to start GLFW!\n");
         return -1;
     }
 
