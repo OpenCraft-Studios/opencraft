@@ -77,7 +77,7 @@ Some basic advices to prevent impersonation, promote safety and always encourage
 <br />
 
 🔹 **You must always give credit to the original authors.** <br />
-🔹 The full license can be found at [BSD 3.0][license-url].
+🔹 The full license can be found at [OCPL-1.0][license-url].
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -104,5 +104,5 @@ Some basic advices to prevent impersonation, promote safety and always encourage
 [stars-url]: https://github.com/OpenCraft-Studios/opencraft/stargazers
 [issues-shield]: https://img.shields.io/github/issues/OpenCraft-Studios/opencraft.svg?style=for-the-badge&logo=github
 [issues-url]: https://github.com/OpenCraft-Studios/opencraft/issues
-[license-shield]: https://img.shields.io/github/license/OpenCraft-Studios/opencraft.svg?style=for-the-badge&logo=github
-[license-url]: https://github.com/OpenCraft-Studios/opencraft/blob/master/LICENSE.txt
+[license-shield]: https://img.shields.io/badge/OCPL--1.0-green?style=for-the-badge&logo=github&label=LICENSE
+[license-url]: https://github.com/OpenCraft-Studios/opencraft/blob/master/LICENSE.md
