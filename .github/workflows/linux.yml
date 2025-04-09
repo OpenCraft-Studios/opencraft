@@ -28,6 +28,25 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo apt-get -y update
           sudo apt-get -y install gcc-multilib cmake
+          sudo apt-get -y install libc6-dev-i386 xorg-dev libgl1-mesa-dev:i386 libx11-dev:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxcursor-dev:i386 libxi-dev:i386
+          
+          # Create symbolic link (GLFW building patch)
+          sudo ln -s /usr/lib32/libm.so /usr/lib/i386-linux-gnu/libm.so || true
+
+      - name: Install GLFW
+        shell: bash
+        env:
+          CFLAGS: "-m32"
+          CXXFLAGS: "-m32"
+        run: |
+          git clone --branch latest --single-branch https://github.com/glfw/glfw.git glfw-v3.4
+          cd glfw-v3.4
+          
+          cmake -B build-x11-static -S . -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_X11=ON
+          cmake --build build-x11-static --parallel
+          
+          cd build-x11-static
+          sudo make install
 
       - name: Compile
         shell: bash
@@ -81,7 +100,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get -y update
-          sudo apt-get -y install cmake
+          sudo apt-get -y install cmake libglfw3-dev
 
       - name: Compile
         shell: bash

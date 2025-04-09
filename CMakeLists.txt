@@ -1,19 +1,29 @@
 cmake_minimum_required(VERSION 3.10)
 project(OpenCraft C)
 
-# Set C standard
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED True)
+## Debug helper
+  set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# Recursively search for all .c files in src/ and subdirectories
-file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
+## C/C++ standards
+  set(CMAKE_C_STANDARD 99)
+  set(CMAKE_C_STANDARD_REQUIRED True)
 
-# Compilation target options
-option(TARGET_WINDOWS "Build for Windows (32/64-bit)" OFF)
-option(TARGET_LINUX "Build for Linux (32/64-bit)" OFF)
+## Source files
+  # (Recursively search for all .c files in src/ and subdirectories)
+  file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
 
-# Default executable name
-set(EXECUTABLE_NAME "opencraft")
+## Compilation target options
+  option(TARGET_WINDOWS "Build for Windows (32/64-bit)" OFF)
+  option(TARGET_LINUX "Build for Linux (32/64-bit)" OFF)
+
+## Executable settings
+  # Default executable name (generic)
+    set(EXECUTABLE_NAME "opencraft")
+
+  # Set output directory and filename
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+    set(CMAKE_RUNTIME_OUTPUT_NAME ${EXECUTABLE_NAME})
+    set(CMAKE_EXECUTABLE_SUFFIX "")
 
 # Load platform-specific configuration
 if(TARGET_WINDOWS)
@@ -21,13 +31,5 @@ if(TARGET_WINDOWS)
 elseif(TARGET_LINUX)
     include(cmake/Linux.cmake)
 else()
-    message(STATUS "Building in standard mode (compatible with the current system)")
+    message(STATUS "Building in standard mode")
 endif()
-
-# Set output directory and filename
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_NAME ${EXECUTABLE_NAME})
-set(CMAKE_EXECUTABLE_SUFFIX "")
-
-# Generate final executable
-add_executable(${EXECUTABLE_NAME} ${SRC_FILES})
