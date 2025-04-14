@@ -1,38 +1,42 @@
 # include <stdio.h>
+# include <glad/glad.h>
 # include <GLFW/glfw3.h>
 
-static GLFWwindow* window;
+static GLFWwindow *window;
 
-int main( void )
+int main(void)
 {
-    if (!glfwInit()) {
-        fprintf(stderr, "[ main/ERROR ]: Unable to start GLFW!\n");
-        return -1;
-    }
+	if (!glfwInit())
+	{
+		fprintf(stderr, "[ main/ERROR ]: Unable to start GLFW!\n");
+		return -1;
+	}
 
-    window = glfwCreateWindow(640, 480, "OpenCraft 25r01", NULL, NULL);
-    if (!window) {
-        glfwTerminate();
-        return -1;
-    }
+	window = glfwCreateWindow(854, 480, "OpenCraft 25r01", NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		return -1;
+	}
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        // We are gonna implement this later with GLAD
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		fprintf(stderr, "[ main/ERROR ]: Failed to initialize GLAD!\n");
+		return -1;
+	}
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+	glClearColor(1, 0, 0, 1);
 
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
+	while (!glfwWindowShouldClose(window))
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
 
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    return 0;
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	return 0;
 }

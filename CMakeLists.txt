@@ -8,9 +8,10 @@ project(OpenCraft C)
   set(CMAKE_C_STANDARD 99)
   set(CMAKE_C_STANDARD_REQUIRED True)
 
-## Source files
+## Source files and includes
   # (Recursively search for all .c files in src/ and subdirectories)
   file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
+  include_directories(include)
 
 ## Compilation target options
   option(TARGET_WINDOWS "Build for Windows (32/64-bit)" OFF)
