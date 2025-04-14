@@ -10,11 +10,11 @@
 
     Loader: True
     Local files: False
-    Omit khrplatform: True
+    Omit khrplatform: False
     Reproducible: False
 
     Commandline:
-        --profile="compatibility" --api="gl=3.3" --generator="c" --spec="gl" --omit-khrplatform --extensions=""
+        --profile="compatibility" --api="gl=3.3" --generator="c" --spec="gl" --extensions=""
     Online:
         https://glad.dav1d.de/#profile=compatibility&language=c&specification=gl&loader=on&api=gl%3D3.3
 */
@@ -88,20 +88,21 @@ GLAPI int gladLoadGL(void);
 
 GLAPI int gladLoadGLLoader(GLADloadproc);
 
+#include <KHR/khrplatform.h>
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
 typedef unsigned int GLbitfield;
 typedef void GLvoid;
-typedef int8_t GLbyte;
-typedef uint8_t GLubyte;
-typedef int16_t GLshort;
-typedef uint16_t GLushort;
+typedef khronos_int8_t GLbyte;
+typedef khronos_uint8_t GLubyte;
+typedef khronos_int16_t GLshort;
+typedef khronos_uint16_t GLushort;
 typedef int GLint;
 typedef unsigned int GLuint;
-typedef int32_t GLclampx;
+typedef khronos_int32_t GLclampx;
 typedef int GLsizei;
-typedef float GLfloat;
-typedef float GLclampf;
+typedef khronos_float_t GLfloat;
+typedef khronos_float_t GLclampf;
 typedef double GLdouble;
 typedef double GLclampd;
 typedef void *GLeglClientBufferEXT;
@@ -113,65 +114,17 @@ typedef void *GLhandleARB;
 #else
 typedef unsigned int GLhandleARB;
 #endif
-typedef uint16_t GLhalf;
-typedef uint16_t GLhalfARB;
-typedef int32_t GLfixed;
-#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ > 1060)
-#if defined(__khrplatform_h_)
-typedef intptr_t GLintptr;
-#else
-typedef long GLintptr;
-#endif
-#else
-#if defined(__khrplatform_h_)
-typedef intptr_t GLintptr;
-#else
-typedef ptrdiff_t GLintptr;
-#endif
-#endif
-#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ > 1060)
-#if defined(__khrplatform_h_)
-typedef intptr_t GLintptrARB;
-#else
-typedef long GLintptrARB;
-#endif
-#else
-#if defined(__khrplatform_h_)
-typedef intptr_t GLintptrARB;
-#else
-typedef ptrdiff_t GLintptrARB;
-#endif
-#endif
-#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ > 1060)
-#if defined(__khrplatform_h_)
-typedef ssize_t GLsizeiptr;
-#else
-typedef long GLsizeiptr;
-#endif
-#else
-#if defined(__khrplatform_h_)
-typedef ssize_t GLsizeiptr;
-#else
-typedef ptrdiff_t GLsizeiptr;
-#endif
-#endif
-#if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && (__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ > 1060)
-#if defined(__khrplatform_h_)
-typedef ssize_t GLsizeiptrARB;
-#else
-typedef long GLsizeiptrARB;
-#endif
-#else
-#if defined(__khrplatform_h_)
-typedef ssize_t GLsizeiptrARB;
-#else
-typedef ptrdiff_t GLsizeiptrARB;
-#endif
-#endif
-typedef int64_t GLint64;
-typedef int64_t GLint64EXT;
-typedef uint64_t GLuint64;
-typedef uint64_t GLuint64EXT;
+typedef khronos_uint16_t GLhalf;
+typedef khronos_uint16_t GLhalfARB;
+typedef khronos_int32_t GLfixed;
+typedef khronos_intptr_t GLintptr;
+typedef khronos_intptr_t GLintptrARB;
+typedef khronos_ssize_t GLsizeiptr;
+typedef khronos_ssize_t GLsizeiptrARB;
+typedef khronos_int64_t GLint64;
+typedef khronos_int64_t GLint64EXT;
+typedef khronos_uint64_t GLuint64;
+typedef khronos_uint64_t GLuint64EXT;
 typedef struct __GLsync *GLsync;
 struct _cl_context;
 struct _cl_event;
