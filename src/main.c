@@ -1,19 +1,18 @@
 # include <stdio.h>
-# include <GLFW/glfw3.h>
 # include <glad/glad.h>
+# include <GLFW/glfw3.h>
 
 static GLFWwindow *window;
 
 int main(void)
 {
-    window = glfwCreateWindow(640, 480, "OpenCraft 25r01", NULL, NULL);
 	if (!glfwInit())
 	{
 		fprintf(stderr, "[ main/ERROR ]: Unable to start GLFW!\n");
 		return -1;
 	}
 
-	window = glfwCreateWindow(640, 480, "OpenCraft 25r01", NULL, NULL);
+	window = glfwCreateWindow(854, 480, "OpenCraft 25r01", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
