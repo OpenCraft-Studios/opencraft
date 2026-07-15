@@ -3,8 +3,8 @@ name: Deployment
 on: [workflow_dispatch]
 
 jobs:
-  buildu:
-    name: Buildj ${{ matrix.platform }}
+  Build:
+    name: Build
 
     strategy:
       fail-fast: false
