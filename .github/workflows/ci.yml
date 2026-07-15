@@ -5,6 +5,8 @@ on: [workflow_dispatch]
 jobs:
   Build:
     name: Build
+    environment:
+      name: Build
 
     strategy:
       fail-fast: false
