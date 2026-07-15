@@ -1,0 +1,27 @@
+name: Deployment
+
+on: [workflow_dispatch]
+
+jobs:
+  buildu:
+    name: Buildj ${{ matrix.platform }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: Ubuntu
+            os: ubuntu-latest
+          - platform: Windows
+            os: windows-latest
+          - platform: macOS
+            os: macos-latest
+    
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build
+        shell: bash
+        run: echo "Building for ${{ matrix.platform}}"
+      
