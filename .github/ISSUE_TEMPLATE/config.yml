@@ -3,3 +3,6 @@ contact_links:
   - name: Let the community guide you!
     url: https://github.com/OpenCraft-Studios/opencraft/discussions
     about: Have a question? The quickest way to get help is on OpenCraft's GitHub Discussions!
+  - name: Project setup issues
+    url: https://github.com/OpenCraft-Studios/opencraft/discussions
+    about: The community will guide you to install anything you need.
