@@ -8,35 +8,12 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Build"
+      - run: echo "Building..."
 
   test:
-    name: Test
     needs: build
-    runs-on: ${{ matrix.runner }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - runner: ubuntu-latest
-            platform: Linux
-          - runner: macos-latest
-            platform: macOS
-          - runner: windows-latest
-            platform: Windows
-    steps:
-      - name: Build ${{ matrix.platform }}
-        run: echo "Build ${{ matrix.platform }}"
+    uses: ./.github/workflows/test.yml
 
   publish:
-    name: Publish
     needs: test
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [Linux, macOS, Windows]
-    environment: production
-    steps:
-      - name: Publish ${{ matrix.platform }}
-        run: echo "Publish ${{ matrix.platform }}"
+    uses: ./.github/workflows/publish.yml
