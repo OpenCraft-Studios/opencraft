@@ -1,57 +1,42 @@
+
 name: matrix-build-deploy
 
-on:
-  push:
+on: push
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build
-        run: echo "Building..."
+      - run: echo "Build"
 
   test:
-    name: Test ${{ matrix.platform }}
+    name: Test
     needs: build
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - platform: Linux
-            runner: ubuntu-latest
-          - platform: macOS
-            runner: macos-latest
-          - platform: Windows
-            runner: windows-latest
-
-    runs-on: ${{ matrix.runner }}
-
+          - runner: ubuntu-latest
+            platform: Linux
+          - runner: macos-latest
+            platform: macOS
+          - runner: windows-latest
+            platform: Windows
     steps:
-      - uses: actions/checkout@v4
       - name: Build ${{ matrix.platform }}
-        run: echo "Testing ${{ matrix.platform }}..."
+        run: echo "Build ${{ matrix.platform }}"
 
   publish:
-    name: Publish ${{ matrix.platform }}
+    name: Publish
     needs: test
-
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - platform: Linux
-            runner: ubuntu-latest
-          - platform: macOS
-            runner: macos-latest
-          - platform: Windows
-            runner: windows-latest
-
-    runs-on: ${{ matrix.runner }}
-
+        platform: [Linux, macOS, Windows]
     environment: production
-
     steps:
       - name: Publish ${{ matrix.platform }}
-        run: echo "Publishing ${{ matrix.platform }}..."
+        run: echo "Publish ${{ matrix.platform }}"
