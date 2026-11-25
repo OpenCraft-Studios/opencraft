@@ -1,29 +1,57 @@
-name: Deployment
+name: matrix-build-deploy
 
-on: [workflow_dispatch]
+on:
+  push:
 
 jobs:
-  Build:
+  build:
     name: Build
-    environment:
-      name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: echo "Building..."
+
+  test:
+    name: Test ${{ matrix.platform }}
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: Linux
+            runner: ubuntu-latest
+          - platform: macOS
+            runner: macos-latest
+          - platform: Windows
+            runner: windows-latest
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build ${{ matrix.platform }}
+        run: echo "Testing ${{ matrix.platform }}..."
+
+  publish:
+    name: Publish ${{ matrix.platform }}
+    needs: test
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - platform: Ubuntu
-            os: ubuntu-latest
-          - platform: Windows
-            os: windows-latest
+          - platform: Linux
+            runner: ubuntu-latest
           - platform: macOS
-            os: macos-latest
-    
-    runs-on: ${{ matrix.os }}
+            runner: macos-latest
+          - platform: Windows
+            runner: windows-latest
+
+    runs-on: ${{ matrix.runner }}
+
+    environment: production
 
     steps:
-      - uses: actions/checkout@v7
-      - name: Build
-        shell: bash
-        run: echo "Building for ${{ matrix.platform}}"
-      
+      - name: Publish ${{ matrix.platform }}
+        run: echo "Publishing ${{ matrix.platform }}..."
