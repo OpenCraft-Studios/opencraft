@@ -1,44 +1,55 @@
-
 name: matrix-build-deploy
 
 on: push
 
 jobs:
-  test:
-    name: Test
-    strategy:
-      matrix:
-        include:
-          - platform: Linux
-            runner: ubuntu-latest
-          - platform: macOS
-            runner: macos-latest
-          - platform: Windows
-            runner: windows-latest
-
-    runs-on: ${{ matrix.runner }}
-
+  build:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
-      - name: Build ${{ matrix.platform }}
-        run: echo "Testing"
+      - run: echo "Build"
 
-  publish:
-    name: Publish
-    needs: test
-    strategy:
-      matrix:
-        include:
-          - platform: Linux
-            runner: ubuntu-latest
-          - platform: macOS
-            runner: macos-latest
-          - platform: Windows
-            runner: windows-latest
+  test_linux:
+    name: Build Linux
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Test Linux"
 
-    runs-on: ${{ matrix.runner }}
+  test_macos:
+    name: Build macOS
+    needs: build
+    runs-on: macos-latest
+    steps:
+      - run: echo "Test macOS"
 
+  test_windows:
+    name: Build Windows
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - run: echo "Test Windows"
+
+  publish_linux:
+    name: Publish Linux
+    needs: [test_linux, test_macos, test_windows]
+    runs-on: ubuntu-latest
     environment: production
-
     steps:
-      - name: Publish ${{ matrix.platform }}
-        run: echo "Publishing"
+      - run: echo "Publish Linux"
+
+  publish_macos:
+    name: Publish macOS
+    needs: [test_linux, test_macos, test_windows]
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "Publish macOS"
+
+  publish_windows:
+    name: Publish Windows
+    needs: [test_linux, test_macos, test_windows]
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "Publish Windows"
