@@ -9,47 +9,48 @@ jobs:
     steps:
       - run: echo "Build"
 
-  test_linux:
-    name: Build Linux
+  test:
+    name: Test
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Test Linux"
+    strategy:
+      matrix:
+        include:
+          - name: Test
+            platform: Linux
+            runner: ubuntu-latest
+          - name: Test
+            platform: macOS
+            runner: macos-latest
+          - name: Test
+            platform: Windows
+            runner: windows-latest
 
-  test_macos:
-    name: Build macOS
-    needs: build
-    runs-on: macos-latest
-    steps:
-      - run: echo "Test macOS"
+    runs-on: ${{ matrix.runner }}
 
-  test_windows:
-    name: Build Windows
-    needs: build
-    runs-on: windows-latest
     steps:
-      - run: echo "Test Windows"
+      - name: Build ${{ matrix.platform }}
+        run: echo "Testing ${{ matrix.platform }}"
 
-  publish_linux:
-    name: Publish Linux
-    needs: [test_linux, test_macos, test_windows]
-    runs-on: ubuntu-latest
+  publish:
+    name: Publish
+    needs: test
+    strategy:
+      matrix:
+        include:
+          - name: Publish
+            platform: Linux
+            runner: ubuntu-latest
+          - name: Publish
+            platform: macOS
+            runner: macos-latest
+          - name: Publish
+            platform: Windows
+            runner: windows-latest
+
+    runs-on: ${{ matrix.runner }}
+
     environment: production
-    steps:
-      - run: echo "Publish Linux"
 
-  publish_macos:
-    name: Publish macOS
-    needs: [test_linux, test_macos, test_windows]
-    runs-on: ubuntu-latest
-    environment: production
     steps:
-      - run: echo "Publish macOS"
-
-  publish_windows:
-    name: Publish Windows
-    needs: [test_linux, test_macos, test_windows]
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - run: echo "Publish Windows"
+      - name: Publish ${{ matrix.platform }}
+        run: echo "Publishing ${{ matrix.platform }}"
